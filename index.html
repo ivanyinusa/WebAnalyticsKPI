@@ -27,7 +27,6 @@
     <script language="javascript" type="text/javascript" src="js/dojo.js"></script>
     <script language="javascript" type="text/javascript" src="js/nv.d3.js"></script>
     <script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
-    <script language="javascript" type="text/javascript" src="js/i_ui_websocket.js"></script>
     <script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
 
     <script language="javascript" type="text/javascript">
@@ -227,56 +226,6 @@
                     }
 
                     updateTimeStamp();
-                    ws = new i_ui_websocket({
-                        arg: {
-                            host: "192.168.1.100",
-                            port: "8889",
-                            channel: "so_bybu"
-                        },
-                        gauge_cdc: {
-                            id: "g_cdc",
-                            label: "Source"
-                        },
-                        gauge_spark: {
-                            id: "g_spark",
-                            label: "Spark"
-                        },
-                        gauge_socket: {
-                            id: "g_socket",
-                            label: "Socket"
-                        },
-                        gauge_d3: {
-                            id: "g_d3",
-                            label: "D3js"
-                        },
-                        push_date: function(dt) {
-                            $("div_ts_day").innerHTML = monthNames[dt.getMonth()] + " " + dt.getDate() + ", " + dt.getFullYear().toString();
-                        },
-                        push_time: function(dt) {
-                            if ($("lbl_proc_time")) $("lbl_proc_time").innerHTML = dt;
-                            updateTimeStamp(new Date(dt));
-                        },
-                        push_kpi: function(elem) {
-                            printBU(elem.bu, elem);
-                            BUShare();
-                        },
-                        push_gis: function(data) {
-                            if (!data) data = gis_data;
-                            if (!data) return;
-                            var map = $("if_mapstate");
-                            if (map) {
-                                if (map.contentWindow) {
-                                    map.contentWindow.gis_data = data;
-                                    map.contentWindow.gis.on_gisdata(data);
-                                }
-                            }
-                        },
-                        lbl_proc_time: $("lbl_proc_time"),
-                        lbl_proc_socket: $("lbl_proc_socket"),
-                        div_spark_logo_activate: $("div_spark_logo_activate"),
-                        div_spark_logo_deactivate: $("div_spark_logo_deactivate"),
-                        tbl_bu_sales: $("tbl_bu_sales")
-                    });
                 });
     </script>
 
