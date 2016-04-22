@@ -52,7 +52,7 @@
     },
     get_map_json: function() {
         dojo.xhrGet({
-            url: "data/us-states.json",
+            url: "us-states.json",
             handleAs: "json",
             load: dojo.hitch(this, this.draw_map)
         });
