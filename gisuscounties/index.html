@@ -343,7 +343,7 @@
 
 <script language="javascript" type="text/javascript">
 
-require(["js/index.js"]);
+    require(["js/index.js"]);
 
 </script>
 
@@ -405,127 +405,6 @@ require(["js/index.js"]);
 
 
 <div id="container1" style="position: relative; width: 800px; height: 600px; centered:d"></div>
-
-<script>
-    var USdata = {
-        'AK': 'AK',
-        'AL': 'AL',
-        'AR': 'AR',
-        'AZ': 'AZ',
-        'CA': 'CA',
-        'CO': 'CO',
-        'CT': 'CT',
-        'DC': 'DC',
-        'DE': 'DE',
-        'FL': 'FL', //Simulate a missing value defaults to 2 letter abbr
-        'GA': 'GA',
-        'HI': 'HI',
-        'IA': 'IA',
-        'ID': 'ID',
-        'IL': 'IL',
-        'IN': 'IN',
-        'KS': 'KS',
-        'KY': 'KY',
-        'LA': 'LA',
-        'MA': 'MA',
-        'MD': 'MD',
-        'ME': 'ME',
-        'MI': 'MI',
-        'MN': 'MN',
-        'MO': 'MO',
-        'MS': 'MS',
-        'MT': 'MT',
-        'NC': 'NC',
-        'ND': 'ND',
-        'NE': 'NE',
-        'NH': 'NH',
-        'NJ': 'NJ',
-        'NM': 'NM',
-        'NV': 'NV',
-        'NY': 'NY',
-        'OH': 'OH',
-        'OK': 'OK',
-        'OR': 'OR',
-        'PA': 'PA',
-        'RI': 'RI',
-        'SC': 'SC',
-        'SD': 'SD',
-        'TN': 'TN',
-        'TX': 'TX',
-        'UT': 'UT',
-        'VA': 'VA',
-        'VT': 'VT',
-        'WA': 'WA',
-        'WI': 'WI',
-        'WV': 'WV',
-        'WY': 'WY'};
-    var USmap = new Datamap({
-        element: document.getElementById("container1"),
-        scope: 'usa', //currently supports 'usa' and 'world', however with custom map data you can specify your own
-        projection: 'equirectangular', //style of projection to be used. try "mercator"
-        height: 520, //if not null, datamaps will grab the height of 'element'
-        fills: {
-            defaultFill: '#EDDC4E'
-        },
-        geographyConfig: {
-            highlightBorderColor: '#bada55',
-            popupTemplate: function (geography, data) {
-                return '<div class="hoverinfo">' + geography.properties.name + '</div>';
-            },
-            highlightBorderWidth: 2
-        }
-    });
-    USmap.labels({'customLabelText': USdata});
-
-</script>
-
-<script language="javascript" type="text/javascript">
-    var gAgent = navigator.userAgent;
-    var gName = navigator.appName;
-    var fullVer = "" + parseFloat(navigator.appVersion);
-    var majorVer = parseInt(navigator.appVersion, 10);
-    var sName, sVer, sTrim;
-    if ((sVer = gAgent.indexOf("Opera")) != -1) {
-        gName = "Opera";
-        fullVer = gAgent.substring(sVer + 6);
-        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
-    } else if ((sVer = gAgent.indexOf("MSIE")) != -1) {
-        gName = "Microsoft Internet Explorer";
-        fullVer = gAgent.substring(sVer + 5);
-    } else if ((sVer = gAgent.indexOf("Sleipnir")) != -1) {
-        gName = "Sleipnir";
-        fullVer = gAgent.substring(sVer + 9);
-    } else if ((sVer = gAgent.indexOf("Chrome")) != -1) {
-        gName = "Chrome";
-        fullVer = gAgent.substring(sVer + 7);
-    } else if ((sVer = gAgent.indexOf("Safari")) != -1) {
-        gName = "Safari";
-        fullVer = gAgent.substring(sVer + 7);
-        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
-    } else if ((sVer = gAgent.indexOf("Firefox")) != -1) {
-        gName = "Firefox";
-        fullVer = gAgent.substring(sVer + 8);
-    } else if ((sName = gAgent.lastIndexOf(' ') + 1) < (sVer = gAgent.lastIndexOf('/'))) {
-        gName = gAgent.substring(sName, sVer);
-        fullVer = gAgent.substring(sVer + 1);
-        if (gName.toLowerCase() == gName.toUpperCase()) {
-            gName = navigator.appName;
-        }
-    }
-
-    if ((sTrim = fullVer.indexOf(";")) != -1) fullVer = fullVer.substring(0, sTrim);
-    if ((sTrim = fullVer.indexOf(" ")) != -1) fullVer = fullVer.substring(0, sTrim);
-    majorVer = parseInt('' + fullVer, 10);
-    if (isNaN(majorVer)) {
-        fullVer = '' + parseFloat(navigator.appVersion);
-        majorVer = parseInt(navigator.appVersion, 10);
-    }
-    if ((gAgent.indexOf("MSIE")) != -1 && (majorVer) <= 9) {
-        $("browser_com").innerHTML = "<br><font style='color:red'>The WebSockets property is not supported by IE9 and eariler</font>";
-        $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:red'>" + gName + " " + majorVer + "</font>";
-    }
-    else $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:green'>" + gName + " " + majorVer+"</font>";
-</script>
 
 </body>
 </html>
