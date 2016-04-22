@@ -1,98 +1,532 @@
 <!DOCTYPE html>
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
 <meta charset="utf-8">
-<style>
+<html lang="en">
 
-    path {
-        stroke-linejoin: round;
-        stroke-linecap: round;
-    }
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Analytics KPI</title>
 
-    .districts {
-        fill: #bbb;
-    }
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-    .districts :hover {
-        fill: orange;
-    }
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/nv.d3.css" rel="stylesheet" type="text/css">
+    <link href="dojo/resources/dojo.css" data-dojo-config="async: true">
+    <link rel="stylesheet" href="dgrid/css/dgrid.css">
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
 
-    .district-boundaries {
-        pointer-events: none;
-        fill: none;
-        stroke: #fff;
-        stroke-width: .5px;
-    }
+    <script type="text/javascript" src="js/prototype.js" ></script>
+    <script language="javascript" type="text/javascript" src="js/d3.v3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="js/dojo.js"></script>
+    <script language="javascript" type="text/javascript" src="js/nv.d3.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_gis.js"></script>
 
-    .state-boundaries {
-        pointer-events: none;
-        fill: none;
-        stroke: #fff;
-        stroke-width: 1.5px;
-    }
+    <script language="javascript" type="text/javascript">
+        var monthNames = [
+            "Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct",
+            "Nov", "Dec"
+        ];
+    </script>
+    <script language="javascript" type="text/javascript">
 
-</style>
-<body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/queue.v1.min.js"></script>
-<script src="http://d3js.org/topojson.v1.js"></script>
-<script>
+        function control_tr(tr, button) {
+            var button_style = $(button).className;
+            if (button_style == 'plusIcon') {
+                $(button).className = 'minusIcon';
+                if (tr == "inc") {
+                    $("incex").style.display = 'table-row';
+                    $("increc").style.display = 'table-row';
+                }
+                if (tr == "b2b") {
+                    $("smb").style.display = 'table-row';
+                    $("wholesale").style.display = 'table-row';
+                }
+                if (tr == "ebay") {
+                    $("ebayusa").style.display = 'table-row';
+                    $("ebaycan").style.display = 'table-row';
+                }
+                if (tr == "mkt") {
+                    $("mktb2b").style.display = 'table-row';
+                    $("mktusa").style.display = 'table-row';
+                    $("mktcan").style.display = 'table-row';
+                }
+                if (tr == "3rd") {
+                    $("ebay").style.display = 'table-row';
+                    $("jet").style.display = 'table-row';
+                }
+                if (tr == "international") {
+                    $("intaus").style.display = 'table-row';
+                    $("intgbr").style.display = 'table-row';
+                    $("intind").style.display = 'table-row';
+                    $("intirl").style.display = 'table-row';
+                    $("intnld").style.display = 'table-row';
+                    $("intnzl").style.display = 'table-row';
+                    $("intpol").style.display = 'table-row';
+                    $("intsgp").style.display = 'table-row';
+                }
+            }
+            else if (button_style == 'minusIcon') {
+                $(button).className = 'plusIcon';
+                if (tr == "inc") {
+                    $("incex").style.display = 'none';
+                    $("increc").style.display = 'none';
+                }
+                if (tr == "b2b") {
+                    $("smb").style.display = 'none';
+                    $("wholesale").style.display = 'none';
+                }
+                if (tr == "ebay") {
+                    $("ebayusa").style.display = 'none';
+                    $("ebaycan").style.display = 'none';
+                }
+                if (tr == "mkt") {
+                    $("mktb2b").style.display = 'none';
+                    $("mktusa").style.display = 'none';
+                    $("mktcan").style.display = 'none';
+                }
+                if (tr == "3rd") {
+                    if ($("button_ebay").className == 'minusIcon') control_tr("ebay", "button_ebay");
+                    $("ebay").style.display = 'none';
+                    $("jet").style.display = 'none';
+                }
+                if (tr == "international") {
+                    $("intaus").style.display = 'none';
+                    $("intgbr").style.display = 'none';
+                    $("intind").style.display = 'none';
+                    $("intirl").style.display = 'none';
+                    $("intnld").style.display = 'none';
+                    $("intnzl").style.display = 'none';
+                    $("intpol").style.display = 'none';
+                    $("intsgp").style.display = 'none';
+                }
+            }
+        }
 
-    var width = 960,
-            height = 600;
+        var valueOfTopN = 0;
+        var valueOfSortBy = "County";
+        var valueOfFilter = "";
+        var pagetag = "info:client:page=dashboard";
+        var gis_data = null;
+        var dojoJSON;
+        var digit = new i_ui_digit();
+        var ws;
+        require(["dojo/currency", "dojo/number", "dojo/store/Memory", "dojo/json", "dojo/domReady!"],
+                function(Currency, Number, Memory, JSON) {
+                    cMemory = Memory;
+                    dojoJSON = JSON;
+                    digit.dashboard_report();
+                    if ($("button_inc")) $("button_inc").addEventListener("click", function() { control_tr("inc", "button_inc") });
+                    if ($("button_b2b")) $("button_b2b").addEventListener("click", function() { control_tr("b2b", "button_b2b") });
+                    if ($("button_ebay")) $("button_ebay").addEventListener("click", function() { control_tr("ebay", "button_ebay") });
+                    if ($("button_mkt")) $("button_mkt").addEventListener("click", function() { control_tr("mkt", "button_mkt") });
+                    if ($("button_3rd")) $("button_3rd").addEventListener("click", function() { control_tr("3rd", "button_3rd") });
+                    if ($("button_international")) $("button_international").addEventListener("click", function() { control_tr("international", "button_international") });
+                    control_tr("inc", "button_inc");
+                    control_tr("b2b", "button_b2b");
+                    control_tr("mkt", "button_mkt");
 
-    var projection = d3.geo.albersUsa()
-            .scale(1280)
-            .translate([width / 2, height / 2]);
+                    function BUShare() {
+                        var sales = {
+                            inc: $("table_gps_inc").innerHTML.split("$")[1].replace(/,/g, ""),
+                            usa: $("table_gps_usa").innerHTML.split("$")[1].replace(/,/g, ""),
+                            b2b: $("table_gps_b2b").innerHTML.split("$")[1].replace(/,/g, ""),
+                            can: $("table_gps_can").innerHTML.split("$")[1].replace(/,/g, ""),
+                            ebay: $("table_gps_3rd").innerHTML.split("$")[1].replace(/,/g, ""),
+                            mp: $("table_gps_mkt").innerHTML.split("$")[1].replace(/,/g, ""),
+                            international: $("table_gps_international").innerHTML.split("$")[1].replace(/,/g, "")
+                        }
+                        var total = parseFloat(sales.inc) + parseFloat(sales.mp);
+                        $("table_share_inc").innerHTML = this.digit.replace_minus_sign(sales.inc / total);
+                        $("table_share_mkt").innerHTML = this.digit.replace_minus_sign(sales.mp / total);
+                        $("table_share_usa").innerHTML = this.digit.replace_minus_sign((sales.usa / sales.inc) * (sales.inc / total));
+                        $("table_share_b2b").innerHTML = this.digit.replace_minus_sign((sales.b2b / sales.inc) * (sales.inc / total));
+                        $("table_share_can").innerHTML = this.digit.replace_minus_sign((sales.can / sales.inc) * (sales.inc / total));
+                        $("table_share_b2b").innerHTML = this.digit.replace_minus_sign((sales.b2b / sales.inc) * (sales.inc / total));
+                        $("table_share_3rd").innerHTML = this.digit.replace_minus_sign((sales.ebay / sales.inc) * (sales.inc / total));
+                        $("table_share_international").innerHTML = this.digit.replace_minus_sign((sales.international / sales.inc) * (sales.inc / total));
+                    }
 
-    var path = d3.geo.path()
-            .projection(projection);
 
-    var svg = d3.select("body").append("svg")
-            .attr("width", width)
-            .attr("height", height);
 
-    queue()
-            //.defer(d3.json, "http://bl.ocks.org/mbostock/raw/4090846/us.json")
-            //.defer(d3.json, "/mbostock/raw/4090846/us.json")
-            .defer(d3.json, "us.json")
-            //.defer(d3.json, "http://bl.ocks.org/mbostock/raw/4090846/us-congress-113.json")
-            //.defer(d3.json, "/mbostock/raw/4090846/us-congress-113.json")
-            .defer(d3.json, "us-congress-113.json")
-            .await(ready);
+                    function printBU(bu, elem) {
+                        var gps = $("table_gps_" + bu);
+                        var ds = $("table_ds_" + bu);
+                        var gpm = $("table_gpm_" + bu);
+                        var gpmr = $("table_gpmr_" + bu);
+                        var eims = $("table_eims_" + bu);
+                        var drafteims = $("table_drafteims_" + bu);
+                        var pmwitheims = $("table_pmwitheims_" + bu);
+                        var pmwitheimsr = $("table_pmwitheimsr_" + bu);
+                        var quantity = $("table_quantity_" + bu);
+                        var orders = $("table_orders_" + bu);
+                        var shipping = $("table_shipping_" + bu);
+                        var voidgps = $("table_voidgps_" + bu);
+                        var voidquantity = $("table_voidquantity_" + bu);
+                        var voidorders = $("table_voidorders_" + bu);
 
-    function ready(error, us, congress) {
-        if (error) throw error;
+                        if (gps) gps.innerHTML = this.digit.money(elem.soamount);
+                        if (ds) {
+                            ds.innerHTML = this.digit.money(elem.discount);
+                            ds.className = ((elem.discount >= 0) ? "number_2" : "number_3");
+                        }
+                        if (gpm) {
+                            gpm.innerHTML = this.digit.money(elem.grossproductmargin);
+                            gpm.className = ((elem.grossproductmargin >= 0) ? "number_2" : "number_3");
+                        }
+                        if (gpmr) {
+                            var ratio = elem.grossproductmargin / elem.soamount;
+                            gpmr.innerHTML = this.digit.replace_minus_sign(ratio);
+                            gpmr.className = ((ratio >= 0) ? "number_2" : "number_3");
+                        }
+                        if (eims) {
+                            eims.innerHTML = this.digit.money(elem.eims);
+                            eims.className = ((elem.eims >= 0) ? "number_2" : "number_3");
+                        }
+                        if (drafteims) {
+                            drafteims.innerHTML = this.digit.money(elem.drafteims);
+                            drafteims.className = ((elem.drafteims >= 0) ? "number_2" : "number_3");
+                        }
+                        if (pmwitheims) {
+                            pmwitheims.innerHTML = this.digit.money(elem.grossproductmargin + elem.eims + elem.drafteims);
+                            pmwitheims.className = (((elem.grossproductmargin + elem.eims + elem.drafteims) >= 0) ? "number_2" : "number_3");
+                        }
+                        if (pmwitheimsr) {
+                            var ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
+                            pmwitheimsr.innerHTML = this.digit.replace_minus_sign(ratio);
+                            pmwitheimsr.className = ((ratio >= 0) ? "number_2" : "number_3");
+                        }
+                        if (quantity) quantity.innerHTML = Number.format(elem.quantity);
+                        if (orders) orders.innerHTML = Number.format(elem.orders);
+                        if (shipping) shipping.innerHTML = this.digit.money(elem.shippingcharge);
+                        if (voidgps) voidgps.innerHTML = this.digit.money(elem.ex_soamount);
+                        if (voidquantity) voidquantity.innerHTML = Number.format(elem.ex_quantity);
+                        if (voidorders) voidorders.innerHTML = Number.format(elem.ex_orders);
 
-        svg.append("defs").append("path")
-                .attr("id", "land")
-                .datum(topojson.feature(us, us.objects.land))
-                .attr("d", path);
+                    }
 
-        svg.append("clipPath")
-                .attr("id", "clip-land")
-                .append("use")
-                .attr("xlink:href", "#land");
+                    function updateTimeStamp(dt) {
+                        if (!dt) dt = new Date();
+                        var hours = ((dt.getHours() + 11) % 12 + 1);
+                        var minutes = dt.getMinutes();
+                        var h = (hours < 10) ? ("0" + hours.toString()) : hours.toString()
+                        var m = (minutes < 10) ? ("0" + minutes.toString()) : minutes.toString()
+                        h = (h == "00") ? 12 : h;
+                        if ($("div_ts_tiempo")) $("div_ts_tiempo").innerHTML = h + ":" + m;
+                        if ($("div_ts_sufix")) $("div_ts_sufix").innerHTML = (dt.getHours() >= 12) ? "PM" : "AM";
+                    }
 
-        svg.append("g")
-                .attr("class", "districts")
-                .attr("clip-path", "url(#clip-land)")
-                .selectAll("path")
-                .data(topojson.feature(congress, congress.objects.districts).features)
-                .enter().append("path")
-                .attr("d", path)
-                .append("title")
-                .text(function(d) { return d.id; });
+                    updateTimeStamp();
+                });
+    </script>
 
-        svg.append("path")
-                .attr("class", "district-boundaries")
-                .datum(topojson.mesh(congress, congress.objects.districts, function(a, b) { return a !== b && (a.id / 1000 | 0) === (b.id / 1000 | 0); }))
-                .attr("d", path);
+    <style>
+        h2 {
+            margin: 12px;
+        }
+        .heading {
+            font-weight: bold;
+            padding-bottom: 0.25em;
+        }
+        /* also not part of theme, but a contrived example of using dgrid-sortable. */
+        .dgrid-sortable {
+            font-weight: bold;
+        }
+        /* add styles to size this grid appropriately */
+        .dgrid-autoheight {
+            height: 20em;
+            margin: 2em;
+            font: 4px sans-serif;
+            font-size: 2em;
+        }
+        #scrollgrid {
+            width: 700px;
+            zoom: 1;
+        }
+        #scrollgrid .dgrid-cell {
+            width: 100px; /* force all columns to have SOME width */
+        }
+        #scrollgrid .field-col1 {
+            width: 500px;
+        }
+        #scrollgrid .field-col4 {
+            width: 300px;
+        }
+        .navbar-brand {
+            width: auto;
+            padding: 15px;
+        }
+        .navbar-brand>img {
+            max-height: 100%;
+            height: 100%;
+            width: auto;
+            -o-object-fit: contain;
+            object-fit: contain;
+            padding: 0px; /* firefox bug fix */
+        }
+        .navbar-inner {
+            background:transparent;
+        }
+        label{
+            width:150px;
+            float:left;
+        }
+        .grid{
+            border:2px solid #333;
+            height: 100%;
+            width: 100%;
+            margin:0px;
+            padding:500px;
+        }
+        .dgrid-no-data,
+        .dgrid-loading {
+            color: #aaa;
+            font-size: 3em;
+            padding: 3em;
+            text-align: center;
+        }
+        body {
+            font: 10px sans-serif;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .x.axis path {
+            display: none;
+        }
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, #chart1, svg {
+            margin: 0px;
+            padding: 10px;
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            max-height: 90%;
+        }
+        .nv-bars rect {
+            width: 20px;
+        }
+        .Aligner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .Aligner-item {
+            max-width: 60%;
+        }
+    </style>
+</head>
+<body class="tundra">
+<script src="js/d3.v3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/d3.v3.js"></script>
+<script type="text/javascript" src="js/d3.tip.v0.6.3.js"></script>
+<link href="css/nv.d3.min.css" rel="stylesheet">
+<script src="js/nv.d3.min.js"></script>
 
-        svg.append("path")
-                .attr("class", "state-boundaries")
-                .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-                .attr("d", path);
-    }
+<script language="javascript" type="text/javascript">
 
-    d3.select(self.frameElement).style("height", height + "px");
+require(["js/index.js"]);
 
 </script>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+                <img src="images/dashboard_lightblue_trans.png" style="width:60px;float:left;" />
+
+                <a class="nav navbar-brand" href="#">Web Analytics KPI</a>
+                <a class="nav navbar-brand navbar-inner" href="https://github.com/ivanyinusa"><img src="Penguin_4.ico"></a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar4">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <ul class="nav navbar-nav navbar-left container-fluid">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="/WebAnalyticsKPI/test">Test</a></li>
+                    <li><a href="/WebAnalyticsKPI/debug">Debug</a></li>
+                    <li><a href="/WebAnalyticsKPI/google">Google</a></li>
+                    <li><a href="/WebAnalyticsKPI/dashboard">Dashboard</a></li>
+                    <li><a href="/WebAnalyticsKPI/contact">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://www.google.com">Proxy Google</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">About</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right container-fluid">
+
+                    <!--<img src="images/spark-logo-black-color.png" alt="spark" style=""/>-->
+                    <div id="div_spark_logo_activate" class="spark_logo_activate"></div>
+                    <div id="div_spark_logo_deactivate" class="spark_logo_deactivate"></div>
+                    <div id="g_d3" style="float:right;"></div>
+                    <div id="g_socket" style="float:right;"></div>
+                    <div id="g_spark" style="float:right;"></div>
+                    <div id="g_cdc" style="float:right;"></div>
+
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<div id="container1" style="position: relative; width: 800px; height: 600px; centered:d"></div>
+
+<script>
+    var USdata = {
+        'AK': 'AK',
+        'AL': 'AL',
+        'AR': 'AR',
+        'AZ': 'AZ',
+        'CA': 'CA',
+        'CO': 'CO',
+        'CT': 'CT',
+        'DC': 'DC',
+        'DE': 'DE',
+        'FL': 'FL', //Simulate a missing value defaults to 2 letter abbr
+        'GA': 'GA',
+        'HI': 'HI',
+        'IA': 'IA',
+        'ID': 'ID',
+        'IL': 'IL',
+        'IN': 'IN',
+        'KS': 'KS',
+        'KY': 'KY',
+        'LA': 'LA',
+        'MA': 'MA',
+        'MD': 'MD',
+        'ME': 'ME',
+        'MI': 'MI',
+        'MN': 'MN',
+        'MO': 'MO',
+        'MS': 'MS',
+        'MT': 'MT',
+        'NC': 'NC',
+        'ND': 'ND',
+        'NE': 'NE',
+        'NH': 'NH',
+        'NJ': 'NJ',
+        'NM': 'NM',
+        'NV': 'NV',
+        'NY': 'NY',
+        'OH': 'OH',
+        'OK': 'OK',
+        'OR': 'OR',
+        'PA': 'PA',
+        'RI': 'RI',
+        'SC': 'SC',
+        'SD': 'SD',
+        'TN': 'TN',
+        'TX': 'TX',
+        'UT': 'UT',
+        'VA': 'VA',
+        'VT': 'VT',
+        'WA': 'WA',
+        'WI': 'WI',
+        'WV': 'WV',
+        'WY': 'WY'};
+    var USmap = new Datamap({
+        element: document.getElementById("container1"),
+        scope: 'usa', //currently supports 'usa' and 'world', however with custom map data you can specify your own
+        projection: 'equirectangular', //style of projection to be used. try "mercator"
+        height: 520, //if not null, datamaps will grab the height of 'element'
+        fills: {
+            defaultFill: '#EDDC4E'
+        },
+        geographyConfig: {
+            highlightBorderColor: '#bada55',
+            popupTemplate: function (geography, data) {
+                return '<div class="hoverinfo">' + geography.properties.name + '</div>';
+            },
+            highlightBorderWidth: 2
+        }
+    });
+    USmap.labels({'customLabelText': USdata});
+
+</script>
+
+<script language="javascript" type="text/javascript">
+    var gAgent = navigator.userAgent;
+    var gName = navigator.appName;
+    var fullVer = "" + parseFloat(navigator.appVersion);
+    var majorVer = parseInt(navigator.appVersion, 10);
+    var sName, sVer, sTrim;
+    if ((sVer = gAgent.indexOf("Opera")) != -1) {
+        gName = "Opera";
+        fullVer = gAgent.substring(sVer + 6);
+        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
+    } else if ((sVer = gAgent.indexOf("MSIE")) != -1) {
+        gName = "Microsoft Internet Explorer";
+        fullVer = gAgent.substring(sVer + 5);
+    } else if ((sVer = gAgent.indexOf("Sleipnir")) != -1) {
+        gName = "Sleipnir";
+        fullVer = gAgent.substring(sVer + 9);
+    } else if ((sVer = gAgent.indexOf("Chrome")) != -1) {
+        gName = "Chrome";
+        fullVer = gAgent.substring(sVer + 7);
+    } else if ((sVer = gAgent.indexOf("Safari")) != -1) {
+        gName = "Safari";
+        fullVer = gAgent.substring(sVer + 7);
+        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
+    } else if ((sVer = gAgent.indexOf("Firefox")) != -1) {
+        gName = "Firefox";
+        fullVer = gAgent.substring(sVer + 8);
+    } else if ((sName = gAgent.lastIndexOf(' ') + 1) < (sVer = gAgent.lastIndexOf('/'))) {
+        gName = gAgent.substring(sName, sVer);
+        fullVer = gAgent.substring(sVer + 1);
+        if (gName.toLowerCase() == gName.toUpperCase()) {
+            gName = navigator.appName;
+        }
+    }
+
+    if ((sTrim = fullVer.indexOf(";")) != -1) fullVer = fullVer.substring(0, sTrim);
+    if ((sTrim = fullVer.indexOf(" ")) != -1) fullVer = fullVer.substring(0, sTrim);
+    majorVer = parseInt('' + fullVer, 10);
+    if (isNaN(majorVer)) {
+        fullVer = '' + parseFloat(navigator.appVersion);
+        majorVer = parseInt(navigator.appVersion, 10);
+    }
+    if ((gAgent.indexOf("MSIE")) != -1 && (majorVer) <= 9) {
+        $("browser_com").innerHTML = "<br><font style='color:red'>The WebSockets property is not supported by IE9 and eariler</font>";
+        $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:red'>" + gName + " " + majorVer + "</font>";
+    }
+    else $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:green'>" + gName + " " + majorVer+"</font>";
+</script>
+
+</body>
+</html>
+
