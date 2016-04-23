@@ -419,7 +419,13 @@
 <script type="text/javascript" src="http://ivanyinusa.github.io/WebAnalyticsKPI/js/d3.tip.v0.6.3.js"></script>
 <link href="http://ivanyinusa.github.io/WebAnalyticsKPI/css/nv.d3.min.css" rel="stylesheet">
 <script src="http://ivanyinusa.github.io/WebAnalyticsKPI/js/nv.d3.min.js"></script>
-
+<script>
+$('ul.nav > li').click(function (e) {
+    e.preventDefault();
+    $('ul.nav > li').removeClass('active');
+    $(this).addClass('active');
+});
+</script>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
