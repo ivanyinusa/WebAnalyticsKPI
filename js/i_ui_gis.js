@@ -76,7 +76,7 @@
             var path = d3.geo.path()
                 .projection(projection);
 
-            var gis_tip = d3.tip()
+            var gis_tip = d3.tip
                 .attr('class', 'd3-tip')
                 .offset([6, 0])
                 .html(function(d, i) {
