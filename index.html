@@ -238,7 +238,13 @@ $('ul.nav > li').click(function (e) {
     </script>
 
     <style>
-		#home.active, #contract.active
+
+		.nav li {
+		 background-color:blue;
+		}
+		.nav li.selected {
+		 background-color:red;
+		}
 		{background-color : blue}
         h2 {
             margin: 12px;
@@ -373,7 +379,7 @@ require(["js/index.js"]);
                     <span class="icon-bar"></span>
                 </button>
                 <ul class="nav navbar-nav navbar-left container-fluid">
-                    <li class="active" id="home"><a href="#">Home</a></li>
+                    <li class="active" id="selected"><a href="#">Home</a></li>
                     <li><a href="/WebAnalyticsKPI/test">Test</a></li>
                     <li><a href="/WebAnalyticsKPI/debug">Debug</a></li>
                     <li><a href="/WebAnalyticsKPI/google">Google</a></li>
