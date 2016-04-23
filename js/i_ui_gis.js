@@ -9,15 +9,17 @@
         this.scale_width = 460;
         this.map_instance = d3.map();
         this.duration = 750;
-        this.projection = d3.geo.albersUsa()
-            .scale(this.scale_width)
-            .translate([this.width / 2, this.height / 2]);
-        this.path = d3.geo.path()
-            .projection(this.projection);
         this.init_map();
     },
     init_map: function () {
+        var projection = d3.geo.albersUsa()
+            .scale(this.scale_width)
+            .translate([this.width / 2, this.height / 2]);
+
         var path = d3.geo.path()
+            .projection(this.projection);
+
+		var path = d3.geo.path()
             .projection(this.projection);
 
         var svg = d3.select("#mapcounty").append("svg")
