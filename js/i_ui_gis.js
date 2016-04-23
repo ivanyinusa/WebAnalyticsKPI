@@ -20,7 +20,7 @@
         var path = d3.geo.path()
             .projection(this.projection);
 
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#mapcounty").append("svg")
             .attr("width", this.width)
             .attr("height", this.height);
 
