@@ -54,13 +54,6 @@
             active.classed("active", false);
             active = d3.select(this).classed("active", true);
 
-            var projection = d3.geo.albersUsa()
-                .scale(this.scale_width)
-                .translate([width / 2, height / 2]);
-
-            var path = d3.geo.path()
-                .projection(projection);
-
             var bounds = path.bounds(d),
                 dx = bounds[1][0] - bounds[0][0],
                 dy = bounds[1][1] - bounds[0][1],
