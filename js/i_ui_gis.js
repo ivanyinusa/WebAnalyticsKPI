@@ -9,71 +9,23 @@
         this.scale_width = 460;
         this.map_instance = d3.map();
         this.duration = 750;
+        this.projection = d3.geo.albersUsa()
+            .scale(this.scale_width)
+            .translate([this.width / 2, this.height / 2]);
+        this.path = d3.geo.path()
+            .projection(this.projection);
         this.init_map();
     },
     init_map: function () {
-        var projection = d3.geo.albersUsa()
-            .scale(this.scale_width)
-            .translate([this.width / 2, this.height / 2]);
-
-        var path = d3.geo.path()
-            .projection(this.projection);
-
-		var path = d3.geo.path()
-            .projection(this.projection);
-
-        var svg = d3.select("#mapcounty").append("svg")
-            .attr("width", this.width)
-            .attr("height", this.height);
-
-        svg.append("rect")
-            .attr("class", "background")
-            .attr("width", this.width)
-            .attr("height", this.height)
-            .on("click", reset);
-
-        this.gis_color = d3.scale.threshold()
-            .domain(this.scale_for_map)
-            .range(d3.range(12).map(function(i) { return "q" + i.toString() + "-13"; }));
-
-        var g = svg.append("g")
-            .style("stroke-width", "1.5px");
-
-        function reset() {
-            active.classed("active", false);
-            active = d3.select(null);
-
-            g.transition()
-                .duration(this.duration)
-                .style("stroke-width", "1.5px")
-                .attr("transform", "");
-        };
-
-        function clicked(d) {
-            if (active.node() === this) return reset();
-            active.classed("active", false);
-            active = d3.select(this).classed("active", true);
-
-            var bounds = path.bounds(d),
-                dx = bounds[1][0] - bounds[0][0],
-                dy = bounds[1][1] - bounds[0][1],
-                x = (bounds[0][0] + bounds[1][0]) / 2,
-                y = (bounds[0][1] + bounds[1][1]) / 2,
-                scale = .9 / Math.max(dx / width, dy / height),
-                translate = [width / 2 - scale * x, height / 2 - scale * y];
-
-            g.transition()
-                .duration(750)
-                .style("stroke-width", 1.5 / scale + "px")
-                .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-        };
-
-        d3.json("statePolygonData.json", function (error, JSON) {
-            if (error) throw error;
-
-            projection = d3.geo.albersUsa()
+             projection = d3.geo.albersUsa()
                 .scale(scale_width)
                 .translate([width / 2, height / 2]);
+
+            var zoom = d3.behavior.zoom()
+                .translate([0, 0])
+                .scale(1)
+                .scaleExtent([1, 8])
+                .on("zoom", zoomed);
 
             var path = d3.geo.path()
                 .projection(projection);
@@ -89,7 +41,24 @@
             var svg = d3.select("#mapcounty").append("svg")
                 .attr("width", width)
                 .attr("height", height)
+                .on("click", stopped, true)
                 .call(gis_tip);
+
+            svg.append("rect")
+                .attr("class", "background")
+                .attr("width", this.width)
+                .attr("height", this.height)
+                .on("click", reset);
+
+            var g = svg.append("g")
+                .style("stroke-width", "1.5px");
+
+            svg
+                .call(zoom) // delete this line to disable free zooming
+                .call(zoom.event);
+
+        d3.json("statePolygonData.json", function (error, JSON) {
+            if (error) throw error;
 
             g.selectAll("path")
                 .data(JSON.features)
@@ -108,7 +77,40 @@
                 .attr("class", "mesh")
                 .attr("d", path);
         });
+        function clicked(d) {
+            if (active.node() === this) return reset();
+            active.classed("active", false);
+            active = d3.select(this).classed("active", true);
 
+            var bounds = path.bounds(d),
+                dx = bounds[1][0] - bounds[0][0],
+                dy = bounds[1][1] - bounds[0][1],
+                x = (bounds[0][0] + bounds[1][0]) / 2,
+                y = (bounds[0][1] + bounds[1][1]) / 2,
+                scale = .9 / Math.max(dx / width, dy / height),
+                translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+            svg.transition()
+                .duration(750)
+                .call(zoom.translate(translate).scale(scale).event);
+        }
+        function reset() {
+            active.classed("active", false);
+            active = d3.select(null);
+
+            svg.transition()
+                .duration(750)
+                .call(zoom.translate([0, 0]).scale(1).event);
+        }
+        function zoomed() {
+            g.style("stroke-width", 1.5 / d3.event.scale + "px");
+            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }
+        // If the drag behavior prevents the default click,
+        // also stop propagation so we don’t click-to-zoom.
+        function stopped() {
+            if (d3.event.defaultPrevented) d3.event.stopPropagation();
+        }
         dojo.publish("on_mapready", {});
         if (gis_data && !this.initialized) this.on_gisdata();
     },
