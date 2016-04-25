@@ -122,7 +122,7 @@
         var dojoJSON;
         var digit = new i_ui_digit();
         var ws;
-        require(["js/currency", "dojo/number", "dojo/store/Memory", "dojo/json", "dojo/domReady!"],
+        require(["dojo/currency", "dojo/number", "dojo/store/Memory", "dojo/json", "dojo/domReady!"],
                 function(Currency, Number, Memory, JSON) {
                     cMemory = Memory;
                     dojoJSON = JSON;
@@ -230,8 +230,8 @@
                     updateTimeStamp();
                     ws = new i_ui_websocket({
                         arg: {
-                            host: "192.168.1.100",
-                            port: "8889",
+                            host: "10.1.54.8",
+                            port: "8080",
                             channel: "so_bybu"
                         },
                         gauge_cdc: {
