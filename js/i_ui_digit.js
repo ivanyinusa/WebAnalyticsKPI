@@ -291,7 +291,7 @@ dojo.declare("i_ui_digit", null, {
         var html = "<tr>";
         if (classify == "Overall") {
             var elseller = el.seller.replace(/\ /g, '%20');
-            url = "../so_bybu/index_usa.html?bu=" + BUAbbreviation + "&seller=" + elseller + "&id=" + $random(10000000, 90000000);
+            url = "../so_bybu/index.html?bu=" + BUAbbreviation + "&seller=" + elseller + "&id=" + $random(10000000, 90000000);
             html += "<td align='left ' style='padding:2px 5px 2px 5px; border-right: 2px solid black;border-bottom: 1px dashed;'><a href=" + url + ">" + this.urldecode(el.sellername) + "</a></td>";
             html += "<td align='left' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;border-right: 2px solid black;'>" + el.platform + "</td>";
             html += "<td align='right' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;'>" + this.money(el.soamount) + "</td>";
@@ -312,7 +312,7 @@ dojo.declare("i_ui_digit", null, {
         }
         if (classify == "Category") {
             var elcategory = el.category.replace(/\ /g, '%20');
-            url = "../so_bysubcategory/index_usa.html?bu=" + BUAbbreviation + "&category=" + elcategory + "&seller=" + seller + "&id=" + $random(10000000, 90000000);
+            url = "../so_bysubcategory/index.html?bu=" + BUAbbreviation + "&category=" + elcategory + "&seller=" + seller + "&id=" + $random(10000000, 90000000);
             if (BUAbbreviation != "mkt" && BUAbbreviation != "mktusa" && BUAbbreviation != "mktb2b" && BUAbbreviation != "mktcan") html += "<td align='left' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;border-right: 2px solid black;'>" + el.domain + "</td>";
             html += "<td align='left ' style='padding:2px 5px 2px 5px; border-right: 2px solid black;border-bottom: 1px dashed;'><a href=" + url + ">" + el.category + "</a></td>";
             html += "<td align='right' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;'>" + this.money(el.soamount) + "</td>";
@@ -337,7 +337,7 @@ dojo.declare("i_ui_digit", null, {
         if (classify == "Subcategory") {
             var subcategory = el.subcategory.replace(/\ /g, '%20');
             var su_category = category.replace(/\ /g, '%20');
-            url = "../so_byitem/index_usa.html?bu=" + BUAbbreviation + "&category=" + su_category + "&subcategory=" + subcategory + "&seller=" + seller + "&id=" + $random(10000000, 90000000);
+            url = "../so_byitem/index.html?bu=" + BUAbbreviation + "&category=" + su_category + "&subcategory=" + subcategory + "&seller=" + seller + "&id=" + $random(10000000, 90000000);
             html += "<td align='left ' style='padding:2px 5px 2px 5px; border-right: 2px solid black;border-bottom: 1px dashed;'><a href=" + url + ">" + el.subcategory + "</a></td>";
             html += "<td align='right' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;'>" + this.money(el.soamount) + "</td>";
             html += "<td align='right' style='padding:2px 5px 2px 5px;border-bottom: 1px dashed;'><font class='" + ((el.growl1d >= 0) ? "tablenumber-possitive" : "tablenumber-negative") + "'>" + this.replace_minus_sign(el.growl1d) + "</font></td>";

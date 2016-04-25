@@ -1,116 +1,157 @@
 ﻿dojo.declare("i_ui_gis", null, {
-    constructor: function (options) {
+    constructor: function(options) {
         this.width = 500;
         this.height = 260;
-        this.active = d3.select(null);
         this.ls_w = 20;
         this.ls_h = 20;
         this.initialized = 0;
         this.scale_width = 460;
         this.map_instance = d3.map();
-        this.duration = 750;
-        this.projection = d3.geo.albersUsa()
-            .scale(this.scale_width)
-            .translate([this.width / 2, this.height / 2]);
-        this.path = d3.geo.path()
-            .projection(this.projection);
         this.init_map();
+        this.get_map_json();
     },
-    init_map: function () {
-             projection = d3.geo.albersUsa()
-                .scale(scale_width)
-                .translate([width / 2, height / 2]);
+    init_map: function() {
+        var range = [0, 270000];
+        this.scale_for_map = d3.scale.ordinal()
+            .domain(d3.range(9))
+            .rangeBands([range[0], range[1]]).range();
 
-            var zoom = d3.behavior.zoom()
-                .translate([0, 0])
-                .scale(1)
-                .scaleExtent([1, 8])
-                .on("zoom", zoomed);
+        this.scale_for_legend = d3.scale.ordinal()   //scale for legend
+            .domain(d3.range(9))
+            .rangeBands([range[1], range[0]]).range();
 
-            var path = d3.geo.path()
-                .projection(projection);
+        this.gis_color = d3.scale.threshold()
+            .domain(this.scale_for_map)
+            .range(d3.range(12).map(function(i) { return "q" + i.toString() + "-13"; }));
 
-            var gis_tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([6, 0])
-                .html(function(d, i) {
-                    return "<b>State:</b>" + d.properties.name
-                        + "<br>Revenue:loading....";
-                });
+        var projection = d3.geo.albersUsa()
+            .scale(this.scale_width)
+            .translate([(this.width * 0.45), (this.height * 0.50)]);
 
-            var svg = d3.select("#mapcounty").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .on("click", stopped, true)
-                .call(gis_tip);
+        this.path = d3.geo.path()
+            .projection(projection);
 
-            svg.append("rect")
-                .attr("class", "background")
-                .attr("width", this.width)
-                .attr("height", this.height)
-                .on("click", reset);
+        this.gis_tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([6, 0])
+            .html(function(d, i) {
+                return "<b>State:</b>" + d.properties.name
+                    + "<br>Revenue:loading....";
+            });
 
-            var g = svg.append("g")
-                .style("stroke-width", "1.5px");
+        this.svg = d3.selectAll("#mapcounty").append("svg")
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .call(this.gis_tip);
 
-            svg
-                .call(zoom) // delete this line to disable free zooming
-                .call(zoom.event);
-
-        d3.json("map/usa/state/states.json", function (error, JSON) {
-            if (error) throw error;
-
-            g.selectAll("path")
-                .data(JSON.features)
-                .enter().append("path")
-                .attr("d", path)
-                .attr("class", "feature")
-                .style("cursor", "hand")
-                .on('mouseover', gis_tip.show)
-                .on('mouseout', gis_tip.hide)
-                .on("click", clicked);
-
-            g.append("path")
-                .datum(topojson.mesh(JSON, JSON.features, function (a, b) {
-                    return a !== b;
-                }))
-                .attr("class", "mesh")
-                .attr("d", path);
+        this.g_background = this.svg.append("g");
+        this.g_background.append("rect")
+            .attr("class", "background")
+            .attr("width", this.width)
+            .attr("height", this.height);
+    },
+    get_map_json: function() {
+        dojo.xhrGet({
+            url: "us-states.json",
+            handleAs: "json",
+            load: dojo.hitch(this, this.draw_map)
         });
-        function clicked(d) {
-            if (active.node() === this) return reset();
-            active.classed("active", false);
-            active = d3.select(this).classed("active", true);
+    },
+    to_county: function() {
+        document.location.href = "gis/index.html";
+    },
+    draw_map: function(us) {
+        var ls_h = this.ls_h;
+        var height = this.height;
+        var gis_color = this.gis_color;
 
-            var bounds = path.bounds(d),
-                dx = bounds[1][0] - bounds[0][0],
-                dy = bounds[1][1] - bounds[0][1],
-                x = (bounds[0][0] + bounds[1][0]) / 2,
-                y = (bounds[0][1] + bounds[1][1]) / 2,
-                scale = .9 / Math.max(dx / width, dy / height),
-                translate = [width / 2 - scale * x, height / 2 - scale * y];
+        this.map_counties = this.g_background.append("g")
+            .attr("id", "counties")
+            .selectAll("path")
+            .data(topojson.feature(us, us.objects.states).features)
+            .enter().append("path")
+            .attr("d", this.path)
+            .style("cursor", "hand")
+            .on('mouseover', this.gis_tip.show)
+            .on('mouseout', this.gis_tip.hide)
+            .on('click', this.to_county);
 
-            svg.transition()
-                .duration(750)
-                .call(zoom.translate(translate).scale(scale).event);
-        }
-        function reset() {
-            active.classed("active", false);
-            active = d3.select(null);
+        var labelStartCoodinates = [510, 130];
+        var path = this.path;
+        var g_back = this.g_background;
+        this.g_background.selectAll("shortnameview")
+        .data(topojson.feature(us, us.objects.states).features)
+        .enter()
+        .append("g")
+        .attr("draw-shortname", function(d) {
+            var center = path.centroid(d);
+            if (isNaN(center[0])) return;
+            var xOffset = 7.5, yOffset = 5;
 
-            svg.transition()
-                .duration(750)
-                .call(zoom.translate([0, 0]).scale(1).event);
-        }
-        function zoomed() {
-            g.style("stroke-width", 1.5 / d3.event.scale + "px");
-            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-        }
-        // If the drag behavior prevents the default click,
-        // also stop propagation so we don’t click-to-zoom.
-        function stopped() {
-            if (d3.event.defaultPrevented) d3.event.stopPropagation();
-        }
+            if (["FL", "KY", "MI"].indexOf(d.properties.state) > -1) xOffset = -2.5;
+            if (d.properties.state === "NY") {
+                xOffset = 6;
+                yOffset = 1;
+            }
+            if (d.properties.state === "MI") yOffset = 18;
+            if (d.properties.state === "LA") xOffset = 13;
+
+            var x = 0;
+            var y = 0;
+
+            x = center[0] - xOffset;
+            y = center[1] + yOffset;
+            var yStart = labelStartCoodinates[1];
+
+            var smallStateIndex = ["VT", "NH", "MA", "RI", "CT", "NJ", "DE", "MD", "DC"].indexOf(d.properties.state);
+            if (smallStateIndex > -1) {
+                x = labelStartCoodinates[0] - 100;
+                y = yStart + (smallStateIndex * (2 + 12)) - 60;
+                g_back.append("line")
+                .attr("x1", x - 3)
+                .attr("y1", y - 5)
+                .attr("x2", center[0])
+                .attr("y2", center[1])
+                .style("stroke", "#000")
+                .style("stroke-width", 1);
+            }
+            //  if (x = "NaN") { console.log(d.properties.state) }
+
+            g_back.append("text")
+                .attr("x", x)
+                .attr("y", y)
+                .style("font-size", '10px')
+                .style("font-family", "Verdana")
+                .style("fill", "#000")
+                .style("pointer-events", "none")
+                .text(d.properties.state);
+
+        });
+
+
+        this.legend = this.svg.selectAll("g.legend")
+            .data(this.scale_for_legend)
+            .enter().append("g")
+            .attr("class", "legend");
+
+        this.legendimage = this.legend.append("rect")
+            .attr("x", 0)
+            .attr("y", function(d, i) { return ((i + 1) * ls_h); })
+            .attr("width", this.ls_w)
+            .attr("height", this.ls_h)
+            .attr("class", function(d, i) { return gis_color(d); });
+
+        this.legendtext = this.legend.append("text")
+            .attr("x", 30)
+            .attr("y", function(d, i) { return ((i + 1) * ls_h) + 24; })
+            .text(function count(d, i) {
+                if (i == 0) {
+                    return ">" + d3.format("s")(d).toString();
+                }
+                else {
+                    return d3.format("s")(d).toString();
+                }
+            });
         dojo.publish("on_mapready", {});
         if (gis_data && !this.initialized) this.on_gisdata();
     },
@@ -147,8 +188,8 @@
                 orderT = mj.get(d.properties.state);
             }
             return "<b>State:</b>" + d.properties.name
-                + "<br>Orders:" + orderT
-                + "<br>Revenue:" + dojo.currency.format(reveuneT, { currency: "USD", places: 0 });
+                    + "<br>Orders:" + orderT
+                    + "<br>Revenue:" + dojo.currency.format(reveuneT, { currency: "USD", places: 0 });
         });
 
         mc.attr("class", function(d) {
@@ -161,3 +202,4 @@
         this.initialized = 1;
     }
 });
+
