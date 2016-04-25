@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta  http-equiv="X-UA-Compatible" content="IE=10"/>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script type="text/javascript" src="js/prototype.js" ></script>
+    <script language="javascript" type="text/javascript" src="js/d3.v3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="js/dojo/dojo.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_websocket.js"></script>
+    <script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
+
+
+    <script language="javascript" type="text/javascript">
+        var monthNames = [
+            "Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct",
+            "Nov", "Dec"
+        ];
+    </script>
+    <script language="javascript" type="text/javascript">
+
+        function control_tr(tr, button) {
+            var button_style = $(button).className;
+            if (button_style == 'plusIcon') {
+                $(button).className = 'minusIcon';
+                if (tr == "inc") {
+                    $("incex").style.display = 'table-row';
+                    $("increc").style.display = 'table-row';
+                }
+                if (tr == "b2b") {
+                    $("smb").style.display = 'table-row';
+                    $("wholesale").style.display = 'table-row';
+                }
+                if (tr == "ebay") {
+                    $("ebayusa").style.display = 'table-row';
+                    $("ebaycan").style.display = 'table-row';
+                }
+                if (tr == "mkt") {
+                    $("mktb2b").style.display = 'table-row';
+                    $("mktusa").style.display = 'table-row';
+                    $("mktcan").style.display = 'table-row';
+                }
+                if (tr == "3rd") {
+                    $("ebay").style.display = 'table-row';
+                    $("jet").style.display = 'table-row';
+                }
+                if (tr == "international") {
+                    $("intaus").style.display = 'table-row';
+                    $("intgbr").style.display = 'table-row';
+                    $("intind").style.display = 'table-row';
+                    $("intirl").style.display = 'table-row';
+                    $("intnld").style.display = 'table-row';
+                    $("intnzl").style.display = 'table-row';
+                    $("intpol").style.display = 'table-row';
+                    $("intsgp").style.display = 'table-row';
+                }
+            }
+            else if (button_style == 'minusIcon') {
+                $(button).className = 'plusIcon';
+                if (tr == "inc") {
+                    $("incex").style.display = 'none';
+                    $("increc").style.display = 'none';
+                }
+                if (tr == "b2b") {
+                    $("smb").style.display = 'none';
+                    $("wholesale").style.display = 'none';
+                }
+                if (tr == "ebay") {
+                    $("ebayusa").style.display = 'none';
+                    $("ebaycan").style.display = 'none';
+                }
+                if (tr == "mkt") {
+                    $("mktb2b").style.display = 'none';
+                    $("mktusa").style.display = 'none';
+                    $("mktcan").style.display = 'none';
+                }
+                if (tr == "3rd") {
+                    if ($("button_ebay").className == 'minusIcon') control_tr("ebay", "button_ebay");
+                    $("ebay").style.display = 'none';
+                    $("jet").style.display = 'none';
+                }
+                if (tr == "international") {
+                    $("intaus").style.display = 'none';
+                    $("intgbr").style.display = 'none';
+                    $("intind").style.display = 'none';
+                    $("intirl").style.display = 'none';
+                    $("intnld").style.display = 'none';
+                    $("intnzl").style.display = 'none';
+                    $("intpol").style.display = 'none';
+                    $("intsgp").style.display = 'none';
+                }
+            }
+        }
+
+        var valueOfTopN = 0;
+        var valueOfSortBy = "County";
+        var valueOfFilter = "";
+        var pagetag = "info:client:page=dashboard";
+        var gis_data = null;
+        var dojoJSON;
+        var digit = new i_ui_digit();
+        var ws;
+        require(["../bower_components/dojo/currency", "dojo/number", "dojo/store/Memory", "dojo/json", "dojo/domReady!"],
+                function(Currency, Number, Memory, JSON) {
+                    cMemory = Memory;
+                    dojoJSON = JSON;
+                    digit.dashboard_report();
+                    if ($("button_inc")) $("button_inc").addEventListener("click", function() { control_tr("inc", "button_inc") });
+                    if ($("button_b2b")) $("button_b2b").addEventListener("click", function() { control_tr("b2b", "button_b2b") });
+                    if ($("button_ebay")) $("button_ebay").addEventListener("click", function() { control_tr("ebay", "button_ebay") });
+                    if ($("button_mkt")) $("button_mkt").addEventListener("click", function() { control_tr("mkt", "button_mkt") });
+                    if ($("button_3rd")) $("button_3rd").addEventListener("click", function() { control_tr("3rd", "button_3rd") });
+                    if ($("button_international")) $("button_international").addEventListener("click", function() { control_tr("international", "button_international") });
+                    control_tr("inc", "button_inc");
+                    control_tr("b2b", "button_b2b");
+                    control_tr("mkt", "button_mkt");
+
+                    function BUShare() {
+                        var sales = {
+                            inc: $("table_gps_inc").innerHTML.split("$")[1].replace(/,/g, ""),
+                            usa: $("table_gps_usa").innerHTML.split("$")[1].replace(/,/g, ""),
+                            b2b: $("table_gps_b2b").innerHTML.split("$")[1].replace(/,/g, ""),
+                            can: $("table_gps_can").innerHTML.split("$")[1].replace(/,/g, ""),
+                            ebay: $("table_gps_3rd").innerHTML.split("$")[1].replace(/,/g, ""),
+                            mp: $("table_gps_mkt").innerHTML.split("$")[1].replace(/,/g, ""),
+                            international: $("table_gps_international").innerHTML.split("$")[1].replace(/,/g, "")
+                        }
+                        var total = parseFloat(sales.inc) + parseFloat(sales.mp);
+                        $("table_share_inc").innerHTML = this.digit.replace_minus_sign(sales.inc / total);
+                        $("table_share_mkt").innerHTML = this.digit.replace_minus_sign(sales.mp / total);
+                        $("table_share_usa").innerHTML = this.digit.replace_minus_sign((sales.usa / sales.inc) * (sales.inc / total));
+                        $("table_share_b2b").innerHTML = this.digit.replace_minus_sign((sales.b2b / sales.inc) * (sales.inc / total));
+                        $("table_share_can").innerHTML = this.digit.replace_minus_sign((sales.can / sales.inc) * (sales.inc / total));
+                        $("table_share_b2b").innerHTML = this.digit.replace_minus_sign((sales.b2b / sales.inc) * (sales.inc / total));
+                        $("table_share_3rd").innerHTML = this.digit.replace_minus_sign((sales.ebay / sales.inc) * (sales.inc / total));
+                        $("table_share_international").innerHTML = this.digit.replace_minus_sign((sales.international / sales.inc) * (sales.inc / total));
+                    }
+
+
+
+                    function printBU(bu, elem) {
+                        var gps = $("table_gps_" + bu);
+                        var ds = $("table_ds_" + bu);
+                        var gpm = $("table_gpm_" + bu);
+                        var gpmr = $("table_gpmr_" + bu);
+                        var eims = $("table_eims_" + bu);
+                        var drafteims = $("table_drafteims_" + bu);
+                        var pmwitheims = $("table_pmwitheims_" + bu);
+                        var pmwitheimsr = $("table_pmwitheimsr_" + bu);
+                        var quantity = $("table_quantity_" + bu);
+                        var orders = $("table_orders_" + bu);
+                        var shipping = $("table_shipping_" + bu);
+                        var voidgps = $("table_voidgps_" + bu);
+                        var voidquantity = $("table_voidquantity_" + bu);
+                        var voidorders = $("table_voidorders_" + bu);
+
+                        if (gps) gps.innerHTML = this.digit.money(elem.soamount);
+                        if (ds) {
+                            ds.innerHTML = this.digit.money(elem.discount);
+                            ds.className = ((elem.discount >= 0) ? "number_2" : "number_3");
+                        }
+                        if (gpm) {
+                            gpm.innerHTML = this.digit.money(elem.grossproductmargin);
+                            gpm.className = ((elem.grossproductmargin >= 0) ? "number_2" : "number_3");
+                        }
+                        if (gpmr) {
+                            var ratio = elem.grossproductmargin / elem.soamount;
+                            gpmr.innerHTML = this.digit.replace_minus_sign(ratio);
+                            gpmr.className = ((ratio >= 0) ? "number_2" : "number_3");
+                        }
+                        if (eims) {
+                            eims.innerHTML = this.digit.money(elem.eims);
+                            eims.className = ((elem.eims >= 0) ? "number_2" : "number_3");
+                        }
+                        if (drafteims) {
+                            drafteims.innerHTML = this.digit.money(elem.drafteims);
+                            drafteims.className = ((elem.drafteims >= 0) ? "number_2" : "number_3");
+                        }
+                        if (pmwitheims) {
+                            pmwitheims.innerHTML = this.digit.money(elem.grossproductmargin + elem.eims + elem.drafteims);
+                            pmwitheims.className = (((elem.grossproductmargin + elem.eims + elem.drafteims) >= 0) ? "number_2" : "number_3");
+                        }
+                        if (pmwitheimsr) {
+                            var ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
+                            pmwitheimsr.innerHTML = this.digit.replace_minus_sign(ratio);
+                            pmwitheimsr.className = ((ratio >= 0) ? "number_2" : "number_3");
+                        }
+                        if (quantity) quantity.innerHTML = Number.format(elem.quantity);
+                        if (orders) orders.innerHTML = Number.format(elem.orders);
+                        if (shipping) shipping.innerHTML = this.digit.money(elem.shippingcharge);
+                        if (voidgps) voidgps.innerHTML = this.digit.money(elem.ex_soamount);
+                        if (voidquantity) voidquantity.innerHTML = Number.format(elem.ex_quantity);
+                        if (voidorders) voidorders.innerHTML = Number.format(elem.ex_orders);
+
+                    }
+
+                    function updateTimeStamp(dt) {
+                        if (!dt) dt = new Date();
+                        var hours = ((dt.getHours() + 11) % 12 + 1);
+                        var minutes = dt.getMinutes();
+                        var h = (hours < 10) ? ("0" + hours.toString()) : hours.toString()
+                        var m = (minutes < 10) ? ("0" + minutes.toString()) : minutes.toString()
+                        h = (h == "00") ? 12 : h;
+                        if ($("div_ts_tiempo")) $("div_ts_tiempo").innerHTML = h + ":" + m;
+                        if ($("div_ts_sufix")) $("div_ts_sufix").innerHTML = (dt.getHours() >= 12) ? "PM" : "AM";
+                    }
+
+                    updateTimeStamp();
+                    ws = new i_ui_websocket({
+                        arg: {
+                            host: "192.168.1.100",
+                            port: "8889",
+                            channel: "so_bybu"
+                        },
+                        gauge_cdc: {
+                            id: "g_cdc",
+                            label: "Source"
+                        },
+                        gauge_spark: {
+                            id: "g_spark",
+                            label: "Spark"
+                        },
+                        gauge_socket: {
+                            id: "g_socket",
+                            label: "Socket"
+                        },
+                        gauge_d3: {
+                            id: "g_d3",
+                            label: "D3js"
+                        },
+                        push_date: function(dt) {
+                            $("div_ts_day").innerHTML = monthNames[dt.getMonth()] + " " + dt.getDate() + ", " + dt.getFullYear().toString();
+                        },
+                        push_time: function(dt) {
+                            if ($("lbl_proc_time")) $("lbl_proc_time").innerHTML = dt;
+                            updateTimeStamp(new Date(dt));
+                        },
+                        push_kpi: function(elem) {
+                            printBU(elem.bu, elem);
+                            BUShare();
+                        },
+                        push_gis: function(data) {
+                            if (!data) data = gis_data;
+                            if (!data) return;
+                            var map = $("if_mapstate");
+                            if (map) {
+                                if (map.contentWindow) {
+                                    map.contentWindow.gis_data = data;
+                                    map.contentWindow.gis.on_gisdata(data);
+                                }
+                            }
+                        },
+                        lbl_proc_time: $("lbl_proc_time"),
+                        lbl_proc_socket: $("lbl_proc_socket"),
+                        div_spark_logo_activate: $("div_spark_logo_activate"),
+                        div_spark_logo_deactivate: $("div_spark_logo_deactivate"),
+                        tbl_bu_sales: $("tbl_bu_sales")
+                    });
+                });
+    </script>
+
+    <title>Dashboard - Sales Order</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="css/nv.d3.css" />
+    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body class="application">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid" >
+        <img src="images/dashboard_lightblue_trans.png" style="width:60px;float:left;" />
+        <div style="color:white;font-family:Calibri;font-size:26px;padding-top:8px;padding-left:8px;float:left;">Dashboard - Sales Order</div>
+        <div id="div_spark_logo_activate" class="spark_logo_activate"></div>
+        <div id="div_spark_logo_deactivate" class="spark_logo_deactivate"></div>
+        <!--<img src="images/spark-logo-black-color.png" alt="spark" style=""/>-->
+        <div id="g_d3" style="float:right;"></div>
+        <div id="g_socket" style="float:right;"></div>
+        <div id="g_spark" style="float:right;"></div>
+        <div id="g_cdc" style="float:right;"></div>
+        <div class="top_statusbar">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid" style="padding-top:14px;">
+    <div class="row123">
+        <!--ebay-->
+        <div class="col-sm-12" style="width:1413px;margin-left:-14px">
+            <div class="chart-wrapper">
+                <div style="height:auto;" class="chart-stage" id="lbl_bu_sales">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="chart-wrapper">
+                <div class="chart-stage" style="height:265px;overflow:visible;" >
+
+                    <div id="div_description" style="width:560px;padding-left:5%;font-weight:bold;float:left;">
+                        <table  border="0" cellpadding="0" cellspacing="0" style="width:100%;line-height:14pt;font-size:8pt;font-weight:bold;">
+                            <tr>
+                                <td style="padding-top:25px;width:400px;"><a href="gisuscounties/index.html"><img src="images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+                                <td style="padding-top:25px;padding-left:10%;"><a href="giscan/index.html"><img src="images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+
+                            </tr>
+                            <tr>
+                                <td nowrap="nowrap"><a href="gisuscounties/index.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
+                                <td nowrap="nowrap" style="padding-left:10%;"><a href="giscan/index.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div style="padding-top:20px;padding-left:5%;float:left;"><a href='/dashboard/buybox/' style='color:red;'><B>Buybox Monitor</B></a></div>
+                    <div style="padding-top:20px;padding-left:5%;float:left;"><span><B>Browser compatibility:</B><br>Microsoft Internet Explorer:10 or Later<br>Firefox:11 or Later<br>Chrome:16 or Later</span><span id="browser_com"><br></span><span id="browser_detect"></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="chart-wrapper">
+                <div class="chart-stage">
+                    <div id="div_console" style="height:254px;">
+                        <div class="kpiwrapper" style="padding-top:14px;">
+                            <div style="padding:10px 10px 10px 10px;width:100%;" align="left">
+                                <div style="width:450px;height:100%;" align="left">
+                                    <div id="div_ts_day" style="font-family:Calibri;font-size:16pt;line-height:18px;width:140px;padding-left:6px;">June 04,2015</div>
+                                    <div id="div_ts_tiempo" style="font-family:Arial;font-size:44pt;float:left;">00:00</div>
+                                    <div id="div_ts_sufix" style="font-family:Arial;font-size:14pt;font-weight:bold;float:left;padding-left:4px;padding-top:18px;">AM</div>
+                                </div>
+                                <div style="width:430px;float:left;">
+                                    <div style="width:120px;float:left;white-space:nowrap;">Websocket status: </div>
+                                    <span id="lbl_proc_socket" class="top_statusbar_value" >Disconnected</span>
+                                </div>
+                                <div style="width:430px;float:left;">
+                                    <div style="width:120px;float:left;white-space:nowrap;">Process time: </div>
+                                    <span id="lbl_proc_time" class="top_statusbar_value" style="color:Green;">0000-00-00 00:00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+    var gAgent = navigator.userAgent;
+    var gName = navigator.appName;
+    var fullVer = "" + parseFloat(navigator.appVersion);
+    var majorVer = parseInt(navigator.appVersion, 10);
+    var sName, sVer, sTrim;
+    if ((sVer = gAgent.indexOf("Opera")) != -1) {
+        gName = "Opera";
+        fullVer = gAgent.substring(sVer + 6);
+        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
+    } else if ((sVer = gAgent.indexOf("MSIE")) != -1) {
+        gName = "Microsoft Internet Explorer";
+        fullVer = gAgent.substring(sVer + 5);
+    } else if ((sVer = gAgent.indexOf("Sleipnir")) != -1) {
+        gName = "Sleipnir";
+        fullVer = gAgent.substring(sVer + 9);
+    } else if ((sVer = gAgent.indexOf("Chrome")) != -1) {
+        gName = "Chrome";
+        fullVer = gAgent.substring(sVer + 7);
+    } else if ((sVer = gAgent.indexOf("Safari")) != -1) {
+        gName = "Safari";
+        fullVer = gAgent.substring(sVer + 7);
+        if ((sVer = gAgent.indexOf("Version")) != -1) fullVer = gAgent.substring(sVer + 8);
+    } else if ((sVer = gAgent.indexOf("Firefox")) != -1) {
+        gName = "Firefox";
+        fullVer = gAgent.substring(sVer + 8);
+    } else if ((sName = gAgent.lastIndexOf(' ') + 1) < (sVer = gAgent.lastIndexOf('/'))) {
+        gName = gAgent.substring(sName, sVer);
+        fullVer = gAgent.substring(sVer + 1);
+        if (gName.toLowerCase() == gName.toUpperCase()) {
+            gName = navigator.appName;
+        }
+    }
+
+    if ((sTrim = fullVer.indexOf(";")) != -1) fullVer = fullVer.substring(0, sTrim);
+    if ((sTrim = fullVer.indexOf(" ")) != -1) fullVer = fullVer.substring(0, sTrim);
+    majorVer = parseInt('' + fullVer, 10);
+    if (isNaN(majorVer)) {
+        fullVer = '' + parseFloat(navigator.appVersion);
+        majorVer = parseInt(navigator.appVersion, 10);
+    }
+    if ((gAgent.indexOf("MSIE")) != -1 && (majorVer) <= 9) {
+        $("browser_com").innerHTML = "<br><font style='color:red'>The WebSockets property is not supported by IE9 and eariler</font>";
+        $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:red'>" + gName + " " + majorVer + "</font>";
+    }
+    else $("browser_detect").innerHTML = "<br><B>Current Browser:</B><font style='color:green'>" + gName + " " + majorVer+"</font>";
+</script>
+</body>
+</html>
