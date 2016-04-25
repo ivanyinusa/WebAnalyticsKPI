@@ -650,6 +650,7 @@ dojo.declare("i_ui_digit", null, {
                 html += "<tr id='" + bu[i].split(",")[0] + "'>";
                 html += "<td align='left' class='Table_Row_Cell Table_Row_FirstCol' nowrap='nowrap'><input id='button_" + bu[i].split(",")[0] + "' type='button' class='plusIcon'></input><a class='bu-link' BU=" + bu[i].split(",")[0] + " >" + bu[i].split(",")[1] + "</a></td>";
             }
+                
             else if (bu[i].split(",")[0] == "ebay") {
                 html += "<tr id='" + bu[i].split(",")[0] + "'style='display: none;'>";
                 html += "<td align='left' class='Table_Row_Cell Table_Row_FirstCol' nowrap='nowrap' style='padding-left:30px;'><input id='button_" + bu[i].split(",")[0] + "' type='button' class='plusIcon'></input><a class='bu-link' BU=" + bu[i].split(",")[0] + " >" + bu[i].split(",")[1] + "</a></td>";
