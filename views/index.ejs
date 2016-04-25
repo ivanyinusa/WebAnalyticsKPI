@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--[if lt IE 9]>
-<script src="js/html5shiv.min.js"></script>
+<script src="js/html5shiv.js"></script>
 <script src="js/respond.min.js"></script>
 <![endif]-->
 <meta charset="utf-8">
@@ -8,26 +8,27 @@
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Web Analytics KPI</title>
+	<title><%= title %></title>
 
-	<link rel="stylesheet" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/bootstrap-switch.css">
-	<link rel="stylesheet" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/bootstrap-table.min.css">
-	<link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/styles.css" rel="stylesheet">
-	<link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/nv.d3.css" rel="stylesheet" type="text/css">
-	<link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/nv.d3.min.css" rel="stylesheet">
-	<link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/dojo.css" data-dojo-config="async: true">
-	<link rel="stylesheet" type="text/css" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/css/base.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-	<script language="javascript" type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/dojo.js"></script>
-	<script type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/prototype.js" ></script>
-	<script type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/d3.v3.js"></script>
-	<script language="javascript" type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/d3.v3.min.js"></script>
-	<script language="javascript" type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/nv.d3.js"></script>
-	<script language="javascript" type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/i_ui_digit.js"></script>
-	<script language="javascript" type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/i_ui_gauge.js"></script>
-	<script type="text/javascript" src="https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/d3.tip.v0.6.3.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap-switch.min.css" rel="stylesheet">
+	<link href="css/bootstrap-table.min.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+	<link href="css/nv.d3.css" rel="stylesheet" type="text/css">
+	<link href="dojo/resources/dojo.css" data-dojo-config="async: true">
+	<link rel="stylesheet" href="dgrid/css/dgrid.css">
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+
+	<script type="text/javascript" src="js/prototype.js" ></script>
+	<script language="javascript" type="text/javascript" src="js/d3.v3.min.js"></script>
+	<script language="javascript" type="text/javascript" src="js/dojo/dojo.js"></script>
+	<script language="javascript" type="text/javascript" src="js/nv.d3.js"></script>
+	<script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
+	<script language="javascript" type="text/javascript" src="js/i_ui_websocket.js"></script>
+	<script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
 
 	<script language="javascript" type="text/javascript">
 		var monthNames = [
@@ -173,7 +174,6 @@
 						var voidgps = $("table_voidgps_" + bu);
 						var voidquantity = $("table_voidquantity_" + bu);
 						var voidorders = $("table_voidorders_" + bu);
-						var ratio = 0.00;
 
 						if (gps) gps.innerHTML = this.digit.money(elem.soamount);
 						if (ds) {
@@ -185,7 +185,7 @@
 							gpm.className = ((elem.grossproductmargin >= 0) ? "number_2" : "number_3");
 						}
 						if (gpmr) {
-							ratio = elem.grossproductmargin / elem.soamount;
+							var ratio = elem.grossproductmargin / elem.soamount;
 							gpmr.innerHTML = this.digit.replace_minus_sign(ratio);
 							gpmr.className = ((ratio >= 0) ? "number_2" : "number_3");
 						}
@@ -202,7 +202,7 @@
 							pmwitheims.className = (((elem.grossproductmargin + elem.eims + elem.drafteims) >= 0) ? "number_2" : "number_3");
 						}
 						if (pmwitheimsr) {
-							ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
+							var ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
 							pmwitheimsr.innerHTML = this.digit.replace_minus_sign(ratio);
 							pmwitheimsr.className = ((ratio >= 0) ? "number_2" : "number_3");
 						}
@@ -227,26 +227,64 @@
 					}
 
 					updateTimeStamp();
+					ws = new i_ui_websocket({
+						arg: {
+							host: "192.168.1.100",
+							port: "8889",
+							channel: "so_bybu"
+						},
+						gauge_cdc: {
+							id: "g_cdc",
+							label: "Source"
+						},
+						gauge_spark: {
+							id: "g_spark",
+							label: "Spark"
+						},
+						gauge_socket: {
+							id: "g_socket",
+							label: "Socket"
+						},
+						gauge_d3: {
+							id: "g_d3",
+							label: "D3js"
+						},
+						push_date: function(dt) {
+							$("div_ts_day").innerHTML = monthNames[dt.getMonth()] + " " + dt.getDate() + ", " + dt.getFullYear().toString();
+						},
+						push_time: function(dt) {
+							if ($("lbl_proc_time")) $("lbl_proc_time").innerHTML = dt;
+							updateTimeStamp(new Date(dt));
+						},
+						push_kpi: function(elem) {
+							printBU(elem.bu, elem);
+							BUShare();
+						},
+						push_gis: function(data) {
+							if (!data) data = gis_data;
+							if (!data) return;
+							var map = $("if_mapstate");
+							if (map) {
+								if (map.contentWindow) {
+									map.contentWindow.gis_data = data;
+									map.contentWindow.gis.on_gisdata(data);
+								}
+							}
+						},
+						lbl_proc_time: $("lbl_proc_time"),
+						lbl_proc_socket: $("lbl_proc_socket"),
+						div_spark_logo_activate: $("div_spark_logo_activate"),
+						div_spark_logo_deactivate: $("div_spark_logo_deactivate"),
+						tbl_bu_sales: $("tbl_bu_sales")
+					});
 				});
 	</script>
 
 	<style>
-
-		#mapcounty{
-			fill: white;
-			margin: 12px;
-			padding: 12px;
-			height: 520px;
-			width: 1000px;
-			background-color:black;
-			text-align: center;
-		}
-		.nav li {
-			background-color:transparent;
-		}
-		.nav li.selected li.static {
-			background-color:transparent;
-		}
+		@import "js/dojo/resources/dojo.css";
+		@import "js/dgrid/css/dgrid.css";
+		@import "js/dijit/themes/claro/claro.css";
+		@import "js/dgrid/css/skins/claro.css";
 		h2 {
 			margin: 12px;
 		}
@@ -313,7 +351,6 @@
 		}
 		body {
 			font: 10px sans-serif;
-			text-align: center;
 		}
 		.axis path,
 		.axis line {
@@ -329,7 +366,6 @@
 		}
 		svg {
 			display: block;
-			text-align: center;
 		}
 		html, body, #chart1, svg {
 			margin: 0px;
@@ -338,7 +374,6 @@
 			width: 100%;
 			max-width: 100%;
 			max-height: 90%;
-			text-align: center;
 		}
 		.nv-bars rect {
 			width: 20px;
@@ -355,31 +390,46 @@
 </head>
 
 <body class="tundra">
+<script src="js/d3.v3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/d3.v3.js"></script>
+<script type="text/javascript" src="js/d3.tip.v0.6.3.js"></script>
+<link href="css/nv.d3.min.css" rel="stylesheet">
+<script src="js/nv.d3.min.js"></script>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 
-				<a href="https://github.com/ivanyinusa"><img src="//images/dashboard_lightblue_trans.png" style="width:60px;float:left;" /></a>
+				<!--<img src="images/spark-logo-black-color.png" alt="spark" style=""/>-->
+				<div id="div_spark_logo_activate" class="spark_logo_activate"></div>
+				<div id="div_spark_logo_deactivate" class="spark_logo_deactivate"></div>
+				<div id="g_d3" style="float:right;"></div>
+				<div id="g_socket" style="float:right;"></div>
+				<div id="g_spark" style="float:right;"></div>
+				<div id="g_cdc" style="float:right;"></div>
 
-				<!--<a class="nav navbar-brand navbar-inner" href="https://github.com/ivanyinusa"><img src="Penguin_4.ico"></a>-->
+
+				<a href="https://github.com/ivanyinusa"><img src="images/dashboard_lightblue_trans.png" style="width:60px;float:left;" /></a>
+
+				<a class="nav navbar-brand" href="#">Web Analytics KPI</a>
+				<a class="nav navbar-brand navbar-inner" href="https://github.com/ivanyinusa"><img src="Penguin_4.ico"></a>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar4">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<ul class="nav navbar-nav navbar-inner navbar-left container-fluid">
-					<li class="active" id="selected"><a href="#">Home</a></li>
-					<li><a href="/WebAnalyticsKPI/debug">Debug</a></li>
-					<li><a href="http://www.google.com">Google</a></li>
-					<li><a href="/WebAnalyticsKPI/dashboard">Dashboard</a></li>
-					<li><a href="/WebAnalyticsKPI/contact">Contact</a></li>
+				<ul class="nav navbar-nav navbar-left container-fluid">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="/test">Test</a></li>
+					<li><a href="/debug">Debug</a></li>
+					<li><a href="/dashboard">Dashboard</a></li>
+					<li><a href="/contact">Contact</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="http://www.google.com">Proxy Google</a></li>
+							<li><a href="#">Action</a></li>
 							<li><a href="#">Another action</a></li>
 							<li><a href="#">Something else here</a></li>
 							<li class="divider"></li>
@@ -392,13 +442,6 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right container-fluid">
-
-					<div id="div_spark_logo_activate" class="spark_logo_activate"></div>
-					<div id="div_spark_logo_deactivate" class="spark_logo_deactivate"></div>
-					<div id="g_d3" style="float:right;"></div>
-					<div id="g_socket" style="float:right;"></div>
-					<div id="g_spark" style="float:right;"></div>
-					<div id="g_cdc" style="float:right;"></div>
 
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 					<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -432,18 +475,18 @@
 					<div id="div_description" style="width:560px;padding-left:5%;font-weight:bold;float:left;">
 						<table  border="0" cellpadding="0" cellspacing="0" style="width:100%;line-height:14pt;font-size:8pt;font-weight:bold;">
 							<tr>
-								<td style="padding-top:25px;width:400px;"><a href="views/index_usa.html"><img src="//images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
-								<td style="padding-top:25px;padding-left:10%;"><a href="views/index_usa.html"><img src="//images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+								<td style="padding-top:25px;width:400px;"><a href="gisuscounties/index.html"><img src="images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+								<td style="padding-top:25px;padding-left:10%;"><a href="giscan/index.html"><img src="images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
 
 							</tr>
 							<tr>
-								<td nowrap="nowrap"><a href="views/index_can.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
-								<td nowrap="nowrap" style="padding-left:10%;"><a href="views/index_can.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
+								<td nowrap="nowrap"><a href="gisuscounties/index.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
+								<td nowrap="nowrap" style="padding-left:10%;"><a href="giscan/index.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
 							</tr>
 
 						</table>
 					</div>
-					<div style="padding-top:20px;padding-left:5%;float:left;"><a href='/dashboard/buybox/' style='color:red;'><B>Web Traffic Monitor</B></a></div>
+					<div style="padding-top:20px;padding-left:5%;float:left;"><a href='/dashboard/buybox/' style='color:red;'><B>Page View Monitor</B></a></div>
 					<div style="padding-top:20px;padding-left:5%;float:left;"><span><B>Browser compatibility:</B><br>Microsoft Internet Explorer:10 or Later<br>Firefox:11 or Later<br>Chrome:16 or Later</span><span id="browser_com"><br></span><span id="browser_detect"></span></div>
 				</div>
 			</div>
