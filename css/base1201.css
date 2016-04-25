@@ -289,7 +289,7 @@ tr.border_bottom td
    outline:none;
 }
 .plusIcon:hover { 
-   background-image:  url(../public/images/treeExpandImages.png ');
+   background-image:  url('../public/images/treeExpandImages.png ');
    background-color:transparent;
    border:none;
    background-repeat: no-repeat; 

@@ -123,7 +123,7 @@ body.application hr {
 
 .button_monitor
 {
-    background-image: url(../public/images/monitor.png);
+    background-image: url(../images/monitor.png);
     float:right;
     width:30px;
     height:30px;
@@ -132,7 +132,7 @@ body.application hr {
 
 .button_compare
 {
-    background-image: url(../public/images/compare.png);
+    background-image: url(../images/compare.png);
     float:right;
     width:30px;
     height:30px;
@@ -142,7 +142,7 @@ body.application hr {
 
 .button_close
 {
-    background-image: url(../public/images/cerrar.png);
+    background-image: url(../images/cerrar.png);
     float:right;
     width:16px;
     height:16px;
@@ -185,7 +185,7 @@ tr.border_bottom td
 .spark_logo_activate{
     width:113px;
     height:56px;
-    background-image: url(../public/images/spark-logo-black-activate.png);
+    background-image: url(../images/spark-logo-black-activate.png);
     float:right;
     padding-left:10px;
     padding-right:2px;
@@ -195,7 +195,7 @@ tr.border_bottom td
 .spark_logo_deactivate{
     width:113px;
     height:56px;
-    background-image: url(../public/images/spark-logo-black-deactivate.png);
+    background-image: url(../images/spark-logo-black-deactivate.png);
     float:right;
     padding-left:10px;
     padding-right:2px;
@@ -258,7 +258,7 @@ tr.border_bottom td
     cursor:pointer;
 }
 .minusIcon { 
-   background-image:  url('../public/images/treeExpandImages.png');
+   background-image:  url('../images/treeExpandImages.png');
    background-color:transparent;
    border:none;
    background-repeat: no-repeat; 
@@ -268,7 +268,7 @@ tr.border_bottom td
    outline:none;
 }
 .minusIcon:hover { 
-   background-image:  url('../public/images/treeExpandImages.png');
+   background-image:  url('../images/treeExpandImages.png');
    background-color:transparent;
    border:none;
    background-repeat: no-repeat; 
@@ -278,7 +278,7 @@ tr.border_bottom td
    outline:none;
 }
 .plusIcon { 
-   background-image:  url('../public/images/treeExpandImages.png');
+   background-image:  url('../images/treeExpandImages.png');
    background-color:transparent;
    border:none;
    background-repeat: no-repeat; 
@@ -288,7 +288,7 @@ tr.border_bottom td
    outline:none;
 }
 .plusIcon:hover { 
-   background-image:  url(../public/images/treeExpandImages.png ');
+   background-image:  url('../images/treeExpandImages.png ');
    background-color:transparent;
    border:none;
    background-repeat: no-repeat; 
