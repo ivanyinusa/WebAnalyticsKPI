@@ -16,6 +16,9 @@
             .projection(this.projection);
         this.init_map();
     },
+    to_county: function() {
+        document.location.href = "views/gis.html";
+    },
     init_map: function () {
              projection = d3.geo.albersUsa()
                 .scale(scale_width)
@@ -71,7 +74,8 @@
                 .style("cursor", "hand")
                 .on('mouseover', gis_tip.show)
                 .on('mouseout', gis_tip.hide)
-                .on("click", clicked);
+                //.on("click", clicked)
+                .on('click', this.to_county);;
 
             g.append("path")
                 //.datum(topojson.mesh(us, us.objects.states, function (a, b) {
