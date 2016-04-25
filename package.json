@@ -1,0 +1,21 @@
+{
+  "name": "webkpi",
+  "version": "1.0.0",
+  "description": "KPI",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ivanyinusa@github.com/ivanyinusa/WebKPI.git"
+  },
+  "author": "ivan yin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivanyinusa/WebKPI/issues"
+  },
+  "homepage": "https://github.com/ivanyinusa/WebKPI#readme"
+}
