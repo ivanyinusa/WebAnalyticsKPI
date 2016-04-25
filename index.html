@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if lt IE 9]>
-<script src="js/html5shiv.js"></script>
-<script src="js/respond.min.js"></script>
+<script src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/html5shiv.js"></script>
+<script src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/respond.min.js"></script>
 <![endif]-->
 <meta charset="utf-8">
 <html>
@@ -13,21 +13,20 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
-    <link href="css/bootstrap-table.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
-    <link href="css/nv.d3.css" rel="stylesheet" type="text/css">
-    <link href="dojo/resources/dojo.css" data-dojo-config="async: true">
-    <link rel="stylesheet" href="dgrid/css/dgrid.css">
-    <link rel="stylesheet" type="text/css" href="css/base.css" />
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/styles.css" rel="stylesheet">
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/dojo/resources/dojo.css" data-dojo-config="async: true">
+    <link rel="stylesheet" type="text/css" href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/base.css" />
 
-    <script type="text/javascript" src="js/prototype.js" ></script>
-    <script language="javascript" type="text/javascript" src="js/d3.v3.min.js"></script>
-    <script language="javascript" type="text/javascript" src="js/dojo.js"></script>
-    <script language="javascript" type="text/javascript" src="js/nv.d3.js"></script>
-    <script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
-    <script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
+    <script type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/prototype.js" ></script>
+    <script language="javascript" type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/d3.v3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/dojo.js"></script>
+    <script language="javascript" type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/nv.d3.js"></script>
+    <script language="javascript" type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/i_ui_gauge.js"></script>
+    <script language="javascript" type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/i_ui_digit.js"></script>
 
     <script language="javascript" type="text/javascript">
         var monthNames = [
@@ -173,6 +172,7 @@
                         var voidgps = $("table_voidgps_" + bu);
                         var voidquantity = $("table_voidquantity_" + bu);
                         var voidorders = $("table_voidorders_" + bu);
+                        var ratio = 0.00;
 
                         if (gps) gps.innerHTML = this.digit.money(elem.soamount);
                         if (ds) {
@@ -184,7 +184,7 @@
                             gpm.className = ((elem.grossproductmargin >= 0) ? "number_2" : "number_3");
                         }
                         if (gpmr) {
-                            var ratio = elem.grossproductmargin / elem.soamount;
+                            ratio = elem.grossproductmargin / elem.soamount;
                             gpmr.innerHTML = this.digit.replace_minus_sign(ratio);
                             gpmr.className = ((ratio >= 0) ? "number_2" : "number_3");
                         }
@@ -201,7 +201,7 @@
                             pmwitheims.className = (((elem.grossproductmargin + elem.eims + elem.drafteims) >= 0) ? "number_2" : "number_3");
                         }
                         if (pmwitheimsr) {
-                            var ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
+                            ratio = (elem.grossproductmargin + elem.eims+elem.drafteims) / elem.soamount;
                             pmwitheimsr.innerHTML = this.digit.replace_minus_sign(ratio);
                             pmwitheimsr.className = ((ratio >= 0) ? "number_2" : "number_3");
                         }
@@ -354,11 +354,11 @@
 </head>
 
 <body class="tundra">
-<script src="js/d3.v3.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/d3.v3.js"></script>
-<script type="text/javascript" src="js/d3.tip.v0.6.3.js"></script>
-<link href="css/nv.d3.min.css" rel="stylesheet">
-<script src="js/nv.d3.min.js"></script>
+<script src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/d3.v3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/d3.v3.js"></script>
+<script type="text/javascript" src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/d3.tip.v0.6.3.js"></script>
+<link href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/css/nv.d3.min.css" rel="stylesheet">
+<script src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/js/nv.d3.min.js"></script>
 
 <script language="javascript" type="text/javascript">
 
@@ -371,7 +371,7 @@ require(["js/index.js"]);
         <div class="navbar-header">
             <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 
-                <a href="https://github.com/ivanyinusa"><img src="images/dashboard_lightblue_trans.png" style="width:60px;float:left;" /></a>
+                <a href="https://github.com/ivanyinusa"><img src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/images/dashboard_lightblue_trans.png" style="width:60px;float:left;" /></a>
 
                 <!--<a class="nav navbar-brand navbar-inner" href="https://github.com/ivanyinusa"><img src="Penguin_4.ico"></a>-->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar4">
@@ -403,7 +403,7 @@ require(["js/index.js"]);
 
                 <ul class="nav navbar-nav navbar-right container-fluid">
 
-                    <!--<img src="images/spark-logo-black-color.png" alt="spark" style=""/>-->
+                    <!--<img src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/images/spark-logo-black-color.png" alt="spark" style=""/>-->
                     <div id="div_spark_logo_activate" class="spark_logo_activate"></div>
                     <div id="div_spark_logo_deactivate" class="spark_logo_deactivate"></div>
                     <div id="g_d3" style="float:right;"></div>
@@ -443,13 +443,13 @@ require(["js/index.js"]);
                     <div id="div_description" style="width:560px;padding-left:5%;font-weight:bold;float:left;">
                         <table  border="0" cellpadding="0" cellspacing="0" style="width:100%;line-height:14pt;font-size:8pt;font-weight:bold;">
                             <tr>
-                                <td style="padding-top:25px;width:400px;"><a href="gisuscounties/index.html"><img src="images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
-                                <td style="padding-top:25px;padding-left:10%;"><a href="giscan/index.html"><img src="images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+                                <td style="padding-top:25px;width:400px;"><a href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/views/index.html"><img src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+                                <td style="padding-top:25px;padding-left:10%;"><a href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/views/index.html"><img src="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/public/images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
 
                             </tr>
                             <tr>
-                                <td nowrap="nowrap"><a href="gisuscounties/index.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
-                                <td nowrap="nowrap" style="padding-left:10%;"><a href="giscan/index.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
+                                <td nowrap="nowrap"><a href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/views/index_usa.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
+                                <td nowrap="nowrap" style="padding-left:10%;"><a href="https://github.com/ivanyinusa/WebKPI/blob/gh-pages/views/index_can.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
                             </tr>
 
                         </table>
