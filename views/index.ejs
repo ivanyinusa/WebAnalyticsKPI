@@ -2,13 +2,15 @@
 <!--[if lt IE 9]>
 <script src="js/html5shiv.js"></script>
 <script src="js/respond.min.js"></script>
+<script src="app.js"></script>
 <![endif]-->
 <meta charset="utf-8">
 <html>
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><%= title %></title>
+	<!--title><%= title %></title>-->
+	<title>Web Traffic KPI</title>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
@@ -18,17 +20,16 @@
 	<link href="css/bootstrap-table.min.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
 	<link href="css/nv.d3.css" rel="stylesheet" type="text/css">
-	<link href="dojo/resources/dojo.css" data-dojo-config="async: true">
-	<link rel="stylesheet" href="dgrid/css/dgrid.css">
+	<link href="css/dojo.css" data-dojo-config="async: true">
 	<link rel="stylesheet" type="text/css" href="css/base.css" />
 
 	<script type="text/javascript" src="js/prototype.js" ></script>
 	<script language="javascript" type="text/javascript" src="js/d3.v3.min.js"></script>
-	<script language="javascript" type="text/javascript" src="js/dojo/dojo.js"></script>
-	<script language="javascript" type="text/javascript" src="js/nv.d3.js"></script>
-	<script language="javascript" type="text/javascript" src="js/i_ui_gauge.js"></script>
-	<script language="javascript" type="text/javascript" src="js/i_ui_websocket.js"></script>
-	<script language="javascript" type="text/javascript" src="js/i_ui_digit.js"></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dojo.js"></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/nv.d3.js"></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/i_ui_gauge.js"></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/i_ui_websocket.js"></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/i_ui_digit.js"></script>
 
 	<script language="javascript" type="text/javascript">
 		var monthNames = [
@@ -281,10 +282,6 @@
 	</script>
 
 	<style>
-		@import "js/dojo/resources/dojo.css";
-		@import "js/dgrid/css/dgrid.css";
-		@import "js/dijit/themes/claro/claro.css";
-		@import "js/dgrid/css/skins/claro.css";
 		h2 {
 			margin: 12px;
 		}
@@ -412,8 +409,6 @@
 
 				<a href="https://github.com/ivanyinusa"><img src="images/dashboard_lightblue_trans.png" style="width:60px;float:left;" /></a>
 
-				<a class="nav navbar-brand" href="#">Web Analytics KPI</a>
-				<a class="nav navbar-brand navbar-inner" href="https://github.com/ivanyinusa"><img src="Penguin_4.ico"></a>
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar4">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
@@ -475,13 +470,13 @@
 					<div id="div_description" style="width:560px;padding-left:5%;font-weight:bold;float:left;">
 						<table  border="0" cellpadding="0" cellspacing="0" style="width:100%;line-height:14pt;font-size:8pt;font-weight:bold;">
 							<tr>
-								<td style="padding-top:25px;width:400px;"><a href="gisuscounties/index.html"><img src="images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
-								<td style="padding-top:25px;padding-left:10%;"><a href="giscan/index.html"><img src="images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+								<td style="padding-top:25px;width:400px;"><a href="views/gis_usa.html"><img src="images/us_map.jpg" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
+								<td style="padding-top:25px;padding-left:10%;"><a href="views/gis_can.ejs"><img src="images/Canada.png" alt="" height="140" style="cursor:pointer;border:2px black;"/></a></td>
 
 							</tr>
 							<tr>
-								<td nowrap="nowrap"><a href="gisuscounties/index.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
-								<td nowrap="nowrap" style="padding-left:10%;"><a href="giscan/index.html" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
+								<td nowrap="nowrap"><a href="views/gis_usa.html" style="color:Black;cursor:pointer;padding-left:50px;" >Sales by US States</a></td>
+								<td nowrap="nowrap" style="padding-left:10%;"><a href="views/gis_can.ejs" style="color:Black;cursor:pointer;">Sales by Canada provinces</a></td>
 							</tr>
 
 						</table>
