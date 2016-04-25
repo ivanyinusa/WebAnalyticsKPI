@@ -58,6 +58,7 @@
                 .call(zoom.event);
 
         d3.json("https://rawgit.com/ivanyinusa/WebKPI/gh-pages/map/usa/state/states.json", function (error, us) {
+
             //d3.json("statePolygonData.json", function (error, JSON) {
             if (error) throw error;
 
