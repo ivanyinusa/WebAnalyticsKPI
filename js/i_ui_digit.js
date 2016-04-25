@@ -14,19 +14,19 @@ dojo.declare("i_ui_digit", null, {
     buchange: function(bu) {
         switch (bu) {
             case "inc":
-                return "ABCUniversal Inc.";
+                return "ABC Inc.";
                 break;
             case "inc_foo":
-                return "ABCUniversal Inc.";
+                return "ABC Inc.";
                 break;
             case "usa":
-                return "www.ABCUniversal.com";
+                return "www.ABC.com";
                 break;
             case "b2b":
-                return "www.ABCUniversalbusiness.com";
+                return "www.ABCbusiness.com";
                 break;
             case "can":
-                return "www.ABCUniversal.ca";
+                return "www.ABC.ca";
                 break;
             case "mkt":
                 return "marketplace";
@@ -34,8 +34,8 @@ dojo.declare("i_ui_digit", null, {
             case "vf":
                 return "Virtual Fulfillment";
                 break;
-            case "ABCUniversalflash":
-                return "ABCUniversalflash";
+            case "ABCflash":
+                return "ABCflash";
                 break;
             case "ebay":
                 return "eBay Sales";
@@ -53,22 +53,22 @@ dojo.declare("i_ui_digit", null, {
                 return "Inc.(exclude recertified)";
                 break;
             case "mktb2b":
-                return "(marketplace) biz.ABCUniversal.com";
+                return "(marketplace) biz.ABC.com";
                 break;
             case "mktusa":
-                return "(marketplace) www.ABCUniversal.com";
+                return "(marketplace) www.ABC.com";
                 break;
             case "mktcan":
-                return "(marketplace) www.ABCUniversal.ca";
+                return "(marketplace) www.ABC.ca";
                 break;
             case "increc":
                 return "Inc.(recertified)";
                 break;
             case "ebayusa":
-                return "(eBay) www.ABCUniversal.com";
+                return "(eBay) www.ABC.com";
                 break;
             case "ebaycan":
-                return "(eBay) www.ABCUniversal.ca";
+                return "(eBay) www.ABC.ca";
                 break;
             case "jet":
                 return "Jet.com";
@@ -444,43 +444,43 @@ dojo.declare("i_ui_digit", null, {
             var lnk_so;
             switch (BUAbbreviation) {
                 case "can":
-                    lnk_pdt = "http://www.ABCUniversal.ca/Product/Product.aspx?Item=" + el.item;
-                    lnk_im = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.ItemMaintain.SL.Product/ItemUpdateView?country=" + BUAbbreviation.toUpperCase() + "&ItemNumber=" + el.item;
-                    lnk_pr = "http://central2.ABCUniversal.org/ap-report/90dtrend/CAN/" + el.grp + "/" + category + "/" + el.item;
-                    lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=CAN&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    lnk_pdt = "http://www.ABC.ca/Product/Product.aspx?Item=" + el.item;
+                    lnk_im = "http://central.ABC.org/portal/default.aspx#/ABCCentral.ItemMaintain.SL.Product/ItemUpdateView?country=" + BUAbbreviation.toUpperCase() + "&ItemNumber=" + el.item;
+                    lnk_pr = "http://central2.ABC.org/ap-report/90dtrend/CAN/" + el.grp + "/" + category + "/" + el.item;
+                    lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=CAN&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
                     break;
                 case "b2b": case "smb": case "wholesale":
-                    lnk_pdt = "http://www.ABCUniversalbusiness.com/product/product.aspx?item=" + el.item;
-                    lnk_im = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USB&ItemNumber=" + el.item;
-                    lnk_pr = "http://central2.ABCUniversal.org/ap-report/90dtrend/USB/" + el.grp + "/" + category + "/" + el.item;
-                    lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=9b" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item.toLowerCase().startsWith("snet")) lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item.toLowerCase().startsWith("ewra")) lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item.toLowerCase().startsWith("gc")) lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item.toLowerCase().startsWith("com")) lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item.toLowerCase().startsWith("note")) lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item == "99-993-001") lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
-                    if (el.item == "00-999-157") lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    lnk_pdt = "http://www.ABCbusiness.com/product/product.aspx?item=" + el.item;
+                    lnk_im = "http://central.ABC.org/portal/default.aspx#/ABCCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USB&ItemNumber=" + el.item;
+                    lnk_pr = "http://central2.ABC.org/ap-report/90dtrend/USB/" + el.grp + "/" + category + "/" + el.item;
+                    lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=9b" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item.toLowerCase().startsWith("snet")) lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item.toLowerCase().startsWith("ewra")) lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item.toLowerCase().startsWith("gc")) lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item.toLowerCase().startsWith("com")) lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item.toLowerCase().startsWith("note")) lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item == "99-993-001") lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    if (el.item == "00-999-157") lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USB&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
                     break;
                 case "inc": case "incex": case "increc":
                     lnk_pdt = "";
-                    lnk_im = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
-                    lnk_pr = "http://central2.ABCUniversal.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
+                    lnk_im = "http://central.ABC.org/portal/default.aspx#/ABCCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
+                    lnk_pr = "http://central2.ABC.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
                     lnk_so = "";
                     break;
                 case "mkt": case "mktusa": case "mktb2b":
-                    lnk_pdt = "http://www.ABCUniversal.com/Product/Product.aspx?Item=" + el.item;
-                    lnk_im = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
-                    lnk_pr = "http://central2.ABCUniversal.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
+                    lnk_pdt = "http://www.ABC.com/Product/Product.aspx?Item=" + el.item;
+                    lnk_im = "http://central.ABC.org/portal/default.aspx#/ABCCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
+                    lnk_pr = "http://central2.ABC.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
                     lnk_so = "";
                     break;
                 default:
-                    lnk_pdt = "http://www.ABCUniversal.com/Product/Product.aspx?Item=" + el.item;
-                    lnk_im = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
-                    lnk_pr = "http://central2.ABCUniversal.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
-                    lnk_so = "http://central.ABCUniversal.org/portal/default.aspx#/ABCUniversalCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USA&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
+                    lnk_pdt = "http://www.ABC.com/Product/Product.aspx?Item=" + el.item;
+                    lnk_im = "http://central.ABC.org/portal/default.aspx#/ABCCentral.ItemMaintain.SL.Product/ItemUpdateView?country=USA&ItemNumber=" + el.item;
+                    lnk_pr = "http://central2.ABC.org/ap-report/90dtrend/USA/" + el.grp + "/" + category + "/" + el.item;
+                    lnk_so = "http://central.ABC.org/portal/default.aspx#/ABCCentral.NESO.Item/SOHistory?ItemNumber=" + el.item + "&CompanyCode=1003&CountryCode=USA&FromDate=" + this.monthago + "&ToDate=" + this.tostr;
             }
-            if (el.item.toLowerCase().startsWith("9siv")) lnk_pdt = "http://www.ABCUniversalbusiness.com/product/product.aspx?item=" + el.item;
+            if (el.item.toLowerCase().startsWith("9siv")) lnk_pdt = "http://www.ABCbusiness.com/product/product.aspx?item=" + el.item;
            
             if (lnk_pdt == "") {
                 lnk_pdt = "<span style='color:gray;'>PdtPage</span>";
@@ -603,7 +603,8 @@ dojo.declare("i_ui_digit", null, {
         if ($("lbl_overall_hour")) $("lbl_overall_hour").innerHTML = allhtml;
     },
     dashboard_report: function() {
-        var bu = ["inc, ABCUniversal Inc.", "incex,  Inc.(exclude recertified)", "increc,Inc.(recertified)", "usa,www.ABCUniversal.com", "b2b, B2B", "smb,B2B(SMB)", "wholesale,B2B(Wholesale)", "can,Canada","3rd, 3rd Party Channel", "ebay, eBay Sales", "ebayusa,USA", "ebaycan,Canada", "jet,Jet.com", "international, International", "intaus,Australia", "intind,India", "intirl,Ireland", "intnld,Netherlands", "intnzl,New Zealand", "intpol,Poland", "intsgp,Singapore", "intgbr,United Kingdom", "mkt, Marketplace", "mktusa,USA", "mktb2b,B2B", "mktcan,Canada","ABCUniversalflash,ABCUniversalflash", "vf,Virtual Fulfillment"];
+        var bu = ["inc, ABC Inc.", "incex,  Inc.(exclude recertified)", "increc,Inc.(recertified)", "usa,www.ABC.com", "b2b, B2B", "smb,B2B(SMB)", "wholesale,B2B(Wholesale)", "can,Canada","3rd, 3rd Party Channel", "ebay, eBay Sales", "ebayusa,USA", "ebaycan,Canada", "jet,Jet.com", "international, International", "intaus,Australia", "intind,India", "intirl,Ireland", "intnld,Netherlands", "intnzl,New Zealand", "intpol,Poland", "intsgp,Singapore", "intgbr,United Kingdom", "mkt, Marketplace", "mktusa,USA", "mktb2b,B2B", "mktcan,Canada","ABCflash,ABCflash", "vf,Virtual Fulfillment"];
+        //var bu = ["inc, Newegg Inc.", "incex,  Inc.(exclude recertified)", "increc,Inc.(recertified)", "usa,www.newegg.com", "b2b, B2B", "smb,B2B(SMB)", "wholesale,B2B(Wholesale)", "can,Canada","3rd, 3rd Party Channel", "ebay, eBay Sales", "ebayusa,USA", "ebaycan,Canada", "jet,Jet.com", "international, International", "intaus,Australia", "intind,India", "intirl,Ireland", "intnld,Netherlands", "intnzl,New Zealand", "intpol,Poland", "intsgp,Singapore", "intgbr,United Kingdom", "mkt, Marketplace", "mktusa,USA", "mktb2b,B2B", "mktcan,Canada","neweggflash,Neweggflash", "vf,Virtual Fulfillment"];
         var html = "<table border='0' style='width:99%; border-collapse:collapse;line-height:24px;' id='tbl_bu_sales'>";
         html += "<tr style='background: #fff;left:15px;bottom:15px;line-height:30px;'>";
         html += "<td align='center' class='Table_Header Table_Header_FirstCol'rowspan='2'>Business Unit</td>";
