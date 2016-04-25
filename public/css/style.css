@@ -1,0 +1,171 @@
+﻿.background {
+  fill: none;
+  pointer-events: all;
+}
+
+.legend{
+  stroke-width: 0.4px;
+  fill: black;
+  fill-opacity: 1.0;
+  stroke: black;
+}
+
+#counties {
+  fill: #feddbb;
+  stroke: #8A4200;
+  stroke-width: 0.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.zip {
+    fill: none;
+    stroke: black;
+    stroke-width: .1px;
+}
+
+#counties .active {
+  fill: orange;
+}
+
+#counties-borders {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.q0-13 {fill: #FF3300;}
+.q1-13 {fill: #fdd0a2;}
+.q2-13 {fill: #fdae6b;}
+.q3-13 {fill: #FF8040;}
+.q4-13 {fill: #FF5809;}
+.q5-13 {fill: #F75000;}
+.q6-13 {fill: #D94600;}
+.q7-13 {fill: #BB3D00;}
+.q8-13 {fill: #A23400;}
+.q9-13 {fill: #842B00;}
+.q10-13 {fill: #642100;}
+.q11-13 {fill: #FF3300;}
+.q12-13 {fill: #DC0000;}
+.q13-13 {fill: #760000;}
+
+.reset {fill: #feddbb;}
+
+.number_ne
+{
+    color: #FF0000;      
+}
+
+/*<!--
+.q0-13 {fill: #00513B;}
+.q1-13 {fill: #007418;}
+.q2-13 {fill: #0D9100;}
+.q3-13 {fill: #68BB00;}
+.q4-13 {fill: #9FD400;}
+.q5-13 {fill: #C6E500;}
+.q6-13 {fill: #E5F400;}
+.q7-13 {fill: #FDF600;}
+.q8-13 {fill: #FFBE00;}
+.q9-13 {fill: #FF8500;}
+.q10-13 {fill: #FF3300;}
+.q11-13 {fill: #DC0000;}
+.q12-13 {fill: #760000;}
+
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+.q0-9 {fill: #00513B;}
+.q1-9 {fill: #007418;}
+.q2-9 {fill: #0D9100;}
+.q3-9 {fill: #68BB00;}
+.q4-9 {fill: #9FD400;}
+.q5-9 {fill: #C6E500;}
+.q6-9 {fill: #E5F400;}
+.q7-9 {fill: #FDF600;}
+.q8-9 {fill: #FFBE00;}
+.q9-9 {fill: #FF8500;}
+.q10-9 {fill: #FF3300;}
+.q11-9 {fill: #DC0000;}
+.q12-9 {fill: #760000;}
+-->*/
+
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Northward tooltips */
+.d3-tip.n:after {
+  content: "\25BC";
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+  text-align: center;
+}
+
+/* Eastward tooltips */
+.d3-tip.e:after {
+  content: "\25C0";
+  margin: -4px 0 0 0;
+  top: 50%;
+  left: -8px;
+}
+
+/* Southward tooltips */
+.d3-tip.s:after {
+  content: "\25B2";
+  margin: 0 0 1px 0;
+  top: -8px;
+  left: 0;
+  text-align: center;
+}
+
+/* Westward tooltips */
+.d3-tip.w:after {
+  content: "\25B6";
+  margin: -4px 0 0 -1px;
+  top: 50%;
+  left: 100%;
+}
+.chart-title {
+  border-bottom: 1px solid #d7d7d7;
+  color: #666;
+  font-family:Calibri;
+  font-size: 20px;
+  font-weight:bold;
+  font-weight: 200;
+  padding: 3px 8px 3px;
+}
+
+body.application {
+  background: #f2f2f2;
+}
