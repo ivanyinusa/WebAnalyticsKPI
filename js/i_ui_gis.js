@@ -118,13 +118,13 @@
             //  if (x = "NaN") { console.log(d.properties.state) }
 
             g_back.append("text")
-                .attr("x", x)
-                .attr("y", y)
-                .style("font-size", '10px')
-                .style("font-family", "Verdana")
-                .style("fill", "#000")
-                .style("pointer-events", "none")
-                .text(d.properties.state);
+              .attr("x", x)
+              .attr("y", y)
+              .style("font-size", '10px')
+              .style("font-family", "Verdana")
+              .style("fill", "#000")
+              .style("pointer-events", "none")
+              .text(d.properties.state);
 
         });
 
