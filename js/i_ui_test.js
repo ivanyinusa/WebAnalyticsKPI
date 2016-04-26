@@ -1,12 +1,12 @@
 ﻿dojo.declare("i_ui_test", null, {
     constructor: function (options) {
         this.width = 500;
-        this.height = 260;
+        this.height = 300;
         this.active = d3.select(null);
         this.ls_w = 20;
         this.ls_h = 20;
         this.initialized = 0;
-        this.scale_width = 460;
+        this.scale_width = 500;
         this.map_instance = d3.map();
         this.duration = 750;
         this.projection = d3.geo.albersUsa()
@@ -30,6 +30,11 @@
         var path = d3.geo.path()
             .projection(projection);
 
+        //Define quantize scale to sort data values into buckets of color
+        var color = d3.scale.quantize()
+            .range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
+        //Colors taken from colorbrewer.js, included in the D3 download
+
         var gis_tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([6, 0])
@@ -45,84 +50,96 @@
             .call(gis_tip);
 
         svg.append("rect")
-            .attr("class", "background")
-            .attr("width", this.width)
-            .attr("height", this.height)
-            .on("click", reset);
+                .attr("class", "background")
+                .attr("width", this.width)
+                .attr("height", this.height)
+                .on("click", reset);
 
-        var g = svg.append("g")
-            .style("stroke-width", "1.5px");
+            var g = svg.append("g")
+                .style("stroke-width", "1.5px");
 
-        svg
-            .call(zoom) // delete this line to disable free zooming
-            .call(zoom.event);
-
-        var range = [0, 270000];
-        this.scale_for_map = d3.scale.ordinal()
-            .domain(d3.range(9))
-            .rangeBands([range[0], range[1]]).range();
-
-        this.gis_color = d3.scale.threshold()
-            .domain(this.scale_for_map)
-            .range(d3.range(12).map(function(i) { return "q" + i.toString() + "-13"; }));
+            svg
+                .call(zoom) // delete this line to disable free zooming
+                .call(zoom.event);
 
         d3.csv("data/us-ag-productivity-2004.csv", function(data){
-            this.gis_color.domain([
+            color.domain([
                 d3.min(data, function(d) { return d.value; }),
                 d3.max(data, function(d) { return d.value; })
             ]);
+
+            d3.json("map/usa/state/states.json", function (error, json) {
+                if (error) throw error;
+
+                // 混合农业生产力数据和Geojson
+                // 循环农业生产力数据集中每个值
+                for (var i = 0; i < data.length; i++) {
+                    // 取得州名
+                    var dataState = data[i].state;
+                    // 取得数据值，并从字符串转换成浮点数
+                    var dataValue = parseFloat(data[i].value);
+                    // 在Geojson 中找到相应的州
+                    for (var j = 0; j < json.features.length; j++) {
+                        var jsonState = json.features[j].properties.name;
+                        if (dataState == jsonState) {
+                            // 把数据值复制到json 中
+                            json.features[j].properties.value = dataValue;
+                            // 停止循环json
+                            break;
+                        }
+                    }
+                };
+
+                g.selectAll("path")
+                    .data(json.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .attr("class", "feature")
+                    .style("cursor", "hand")
+                    .style("fill", function(d) {
+                        // 取得数据值
+                        var value = d.properties.value;
+                        if (value) {
+                            // 如果值存在……
+                            return color(value);
+                        } else {
+                            // 如果值不存在……
+                            return "#ccc";
+                        }
+                    })
+                    .on('mouseover', gis_tip.show)
+                    .on('mouseout', gis_tip.hide)
+                    .on("click", clicked);
+
+                g.append("path")
+                    .datum(topojson.mesh(json, json.features, function (a, b) {
+                        return a !== b;
+                    }))
+                    .attr("class", "mesh")
+                    .attr("d", path);
+
+                //Load in cities data
+                d3.csv("data/us-cities.csv", function(data) {
+
+                    g.selectAll("circle")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("cx", function(d) {
+                            return projection([d.lon, d.lat])[0];
+                        })
+                        .attr("cy", function(d) {
+                            return projection([d.lon, d.lat])[1];
+                        })
+                        .attr("r", function(d) {
+                            return Math.sqrt(parseInt(d.population) * 0.00004);})
+                        .style("fill", "yellow")
+                        .style("opacity", 0.75);
+
+                });
+            })
         });
 
-        d3.json("map/usa/state/states.json", function (error, JSON) {
-            if (error) throw error;
-
-            // 混合农业生产力数据和GeoJSON
-            // 循环农业生产力数据集中每个值
-            for (var i = 0; i < data.length; i++) {
-                // 取得州名
-                var dataState = data[i].state;
-                // 取得数据值，并从字符串转换成浮点数
-                var dataValue = parseFloat(data[i].value);
-                // 在GeoJSON 中找到相应的州
-                for (var j = 0; j < json.features.length; j++) {
-                    var jsonState = json.features[j].properties.name;
-                    if (dataState == jsonState) {
-                        // 把数据值复制到JSON 中
-                        json.features[j].properties.value = dataValue;
-                        // 停止循环JSON
-                        break;
-                    }
-                }
-            };
-
-            g.selectAll("path")
-                .data(JSON.features)
-                .enter().append("path")
-                .attr("d", path)
-                .attr("class", "feature")
-                .style("cursor", "hand")
-                .style("fill", function(d) {
-                    // 取得数据值
-                    var value = d.properties.value;
-                    if (value) {
-                        // 如果值存在……
-                        return color(value);
-                    } else {
-                        // 如果值不存在……
-                        return "#ccc";
-                    }
-                })
-                .on('mouseover', gis_tip.show)
-                .on('mouseout', gis_tip.hide)
-                .on("click", clicked);
-
-            g.append("path")
-                .datum(topojson.mesh(JSON, JSON.features, function (a, b) {
-                    return a !== b;
-                }))
-                .attr("class", "mesh")
-                .attr("d", path);
-        });
         function clicked(d) {
             if (active.node() === this) return reset();
             active.classed("active", false);
