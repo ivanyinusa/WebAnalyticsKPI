@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    #mapcounty{
+        fill: white;
+        margin: 12px;
+        padding: 12px;
+        height: 520px;
+        width: 1000px;
+        background-color:black;
+    }
+    .background {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .feature {
+        fill: #ccc;
+        cursor: pointer;
+    }
+
+    .feature.active {
+        fill: orange;
+    }
+    body {
+        margin: 12px;
+        padding: 0px;
+        height: 520px;
+        width: 1000px;
+        font: 10px sans-serif;
+        text-align:center;
+    }
+    .mesh {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    .svg{
+        margin: 12px;
+        padding: 0px;
+        height: 600px;
+        width: 1000px;
+        font: 10px sans-serif;
+    }
+
+</style>
+<body>
+<div id="mapcounty"></div>
+
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/dojo.js"></script>
+<script src="js/i_ui_test.js"></script>
+<script type="text/javascript" src="js/d3.tip.v0.6.3.js"></script>
+<script>
+
+    var width = 500;
+    var height = 260;
+    var active = d3.select(null);
+    var ls_w = 20;
+    var ls_h = 20;
+    var initialized = 0;
+    var scale_width = 460;
+    var map_instance = d3.map();
+    var gis_data = "";
+    var ui_test = new i_ui_test();
+
+</script>
+</body>
+

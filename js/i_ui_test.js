@@ -17,48 +17,83 @@
         this.init_map();
     },
     init_map: function () {
-             projection = d3.geo.albersUsa()
-                .scale(scale_width)
-                .translate([width / 2, height / 2]);
+        var projection = d3.geo.albersUsa()
+            .scale(scale_width)
+            .translate([width / 2, height / 2]);
 
-            var zoom = d3.behavior.zoom()
-                .translate([0, 0])
-                .scale(1)
-                .scaleExtent([1, 8])
-                .on("zoom", zoomed);
+        var zoom = d3.behavior.zoom()
+            .translate([0, 0])
+            .scale(1)
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed);
 
-            var path = d3.geo.path()
-                .projection(projection);
+        var path = d3.geo.path()
+            .projection(projection);
 
-            var gis_tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([6, 0])
-                .html(function(d, i) {
-                    return "<b>State:</b>" + d.properties.name
-                        + "<br>Revenue:loading....";
-                });
+        var gis_tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([6, 0])
+            .html(function(d, i) {
+                return "<b>State:</b>" + d.properties.name
+                    + "<br>Revenue:loading....";
+            });
 
-            var svg = d3.select("#mapcounty").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .on("click", stopped, true)
-                .call(gis_tip);
+        var svg = d3.select("#mapcounty").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .on("click", stopped, true)
+            .call(gis_tip);
 
-            svg.append("rect")
-                .attr("class", "background")
-                .attr("width", this.width)
-                .attr("height", this.height)
-                .on("click", reset);
+        svg.append("rect")
+            .attr("class", "background")
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .on("click", reset);
 
-            var g = svg.append("g")
-                .style("stroke-width", "1.5px");
+        var g = svg.append("g")
+            .style("stroke-width", "1.5px");
 
-            svg
-                .call(zoom) // delete this line to disable free zooming
-                .call(zoom.event);
+        svg
+            .call(zoom) // delete this line to disable free zooming
+            .call(zoom.event);
 
-        d3.json("statePolygonData.json", function (error, JSON) {
+        var range = [0, 270000];
+        this.scale_for_map = d3.scale.ordinal()
+            .domain(d3.range(9))
+            .rangeBands([range[0], range[1]]).range();
+
+        this.gis_color = d3.scale.threshold()
+            .domain(this.scale_for_map)
+            .range(d3.range(12).map(function(i) { return "q" + i.toString() + "-13"; }));
+
+        d3.csv("data/us-ag-productivity-2004.csv", function(data){
+            this.gis_color.domain([
+                d3.min(data, function(d) { return d.value; }),
+                d3.max(data, function(d) { return d.value; })
+            ]);
+        });
+
+        d3.json("map/usa/state/states.json", function (error, JSON) {
             if (error) throw error;
+
+            // 混合农业生产力数据和GeoJSON
+            // 循环农业生产力数据集中每个值
+            for (var i = 0; i < data.length; i++) {
+                // 取得州名
+                var dataState = data[i].state;
+                // 取得数据值，并从字符串转换成浮点数
+                var dataValue = parseFloat(data[i].value);
+                // 在GeoJSON 中找到相应的州
+                for (var j = 0; j < json.features.length; j++) {
+                    var jsonState = json.features[j].properties.name;
+                    if (dataState == jsonState) {
+                        // 把数据值复制到JSON 中
+                        json.features[j].properties.value = dataValue;
+                        // 停止循环JSON
+                        break;
+                    }
+                }
+            };
 
             g.selectAll("path")
                 .data(JSON.features)
@@ -66,6 +101,17 @@
                 .attr("d", path)
                 .attr("class", "feature")
                 .style("cursor", "hand")
+                .style("fill", function(d) {
+                    // 取得数据值
+                    var value = d.properties.value;
+                    if (value) {
+                        // 如果值存在……
+                        return color(value);
+                    } else {
+                        // 如果值不存在……
+                        return "#ccc";
+                    }
+                })
                 .on('mouseover', gis_tip.show)
                 .on('mouseout', gis_tip.hide)
                 .on("click", clicked);

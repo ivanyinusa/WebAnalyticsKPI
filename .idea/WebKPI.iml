@@ -20,6 +20,7 @@
       <sourceFolder url="file://$MODULE_DIR$/fonts" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/images" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/js" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/map" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
