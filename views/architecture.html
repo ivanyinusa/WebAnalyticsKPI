@@ -1,129 +1,13 @@
-
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Drive HTML Viewer</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="screen.css" type="text/css">
-    <script type="text/javascript">
-        var CLIENT_ID = '68779037531.apps.googleusercontent.com';
-        var SCOPES = 'https://www.googleapis.com/auth/drive.install https://www.googleapis.com/auth/drive.readonly';
-
-        function handleClientLoad() {
-            checkAuth();
-        }
-
-        function checkAuth() {
-            gapi.auth.authorize(
-                    {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
-                    handleAuthResult);
-        }
-
-        function handleAuthResult(authResult) {
-            var authPanel = document.getElementById('authorizePanel');
-            authPanel.style.display = 'none';
-            if (authResult && !authResult.error) {
-                openFile();
-            } else {
-                // No access token could be retrieved, show the button to start the authorization flow.
-                showSpinner(false);
-                authPanel.style.display = 'inline-block';
-                document.getElementById('authorizeButton').onclick = function() {
-                    authPanel.style.display = 'none';
-                    showSpinner(true);
-                    gapi.auth.authorize(
-                            {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
-                            handleAuthResult);
-                };
-            }
-        }
-
-        function openFile() {
-            var state = getParameterByName("state");
-            if (state) {
-                var stateObj = eval("(" + state + ')');
-                gapi.client.load('drive', 'v2', function() {
-                    var request = gapi.client.drive.files.get({
-                        'fileId': stateObj.ids[0],
-                        'fields' : "title,mimeType,description,downloadUrl"
-                    });
-                    request.execute(function(resp) {
-                        if (resp.downloadUrl) {
-                            downloadFile(resp, function(content) {
-                                showSpinner(false);
-                                if (content) {
-                                    document.getElementById('iframe').contentWindow.document.write(content);
-                                    document.getElementById('iframe').style.display = 'block';
-                                }
-                            });
-                        } else {
-                            showSpinner(false);
-                            document.getElementById('infoPanel').style.display = 'inline-block';
-                        }
-                    });
-                });
-            } else {
-                showSpinner(false);
-                document.getElementById('infoPanel').style.display = 'inline-block';
-            }
-        }
-
-        function downloadFile(file, callback) {
-            if (file.downloadUrl) {
-                var accessToken = gapi.auth.getToken().access_token;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', file.downloadUrl);
-                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                xhr.onload = function() {
-                    callback(xhr.responseText);
-                };
-                xhr.onerror = function() {
-                    callback(null);
-                };
-                xhr.send();
-            } else {
-                callback(null);
-            }
-        }
-
-        function showSpinner(show) {
-            var spinner = document.getElementById('spinner');
-            if (spinner) spinner.style.display = show ? 'inline-block' : 'none';
-        }
-
-        function getParameterByName(name) {
-            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-        }
-    </script>
-    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <title>Next-Generation-Realtime-Dashboard</title>
 </head>
-<body>
-<table>
-    <tr>
-        <td>
-            <div id="spinner">
-                <div class="spinner" id="spinner_01"></div>
-                <div class="spinner" id="spinner_02"></div>
-                <div class="spinner" id="spinner_03"></div>
-                <div class="spinner" id="spinner_04"></div>
-                <div class="spinner" id="spinner_05"></div>
-                <div class="spinner" id="spinner_06"></div>
-                <div class="spinner" id="spinner_07"></div>
-                <div class="spinner" id="spinner_08"></div>
-            </div>
-            <div id="authorizePanel" style="display:none">
-                <img src="icon-128.png" width="128" height="128" />
-                <h3>You need to authorize the HTML Viewer to be able to view files.<br/>It will also be installed to your drive.</h3>
-                <input type="button" id="authorizeButton" value="Authorize" />
-            </div>
-            <div id="infoPanel" style="display:none">
-                <h3>Go to "Drive" -> "Manage Apps" and set HTML Viewer as default app for HTML files.</h3>
-            </div>
-            <iframe id="iframe" style="height:100%;width:100%;border:none;display:none"/>
-        </td>
-    </tr>
-</table>
+<body style="background-color:#ffffff;">
+<div class="mxgraph" style="position:relative;overflow:auto;width:100%;">
+    <div style="width:1px;height:1px;overflow:hidden;">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</div>
+</div>
+<script type="text/javascript" src="https://www.draw.io/js/embed-static.min.js"></script>
 </body>
 </html>
