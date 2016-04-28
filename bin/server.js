@@ -2,7 +2,7 @@
 
 //var nomo = require('node-monkey').start({port: 50501});
 
-var fs = require('fs')
+var fs = require('fs');
 var util = require('util');
 var logFile = fs.createWriteStream('msglog.txt', { flags: 'w' });
 var logStdout = process.stdout;

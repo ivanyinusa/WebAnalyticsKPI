@@ -21,6 +21,13 @@
       <sourceFolder url="file://$MODULE_DIR$/images" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/js" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/map" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/views" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/routes" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/node_modules" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dashboard" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bower_components" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/data" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

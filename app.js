@@ -12,6 +12,7 @@ var http = require('http').Server(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(__dirname + 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'images', 'Penguin_4.ico')));
 app.use(logger('dev'));
