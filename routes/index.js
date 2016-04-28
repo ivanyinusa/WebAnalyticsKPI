@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/dashboard_linux', function(req, res, next) {
-  res.render('dashboard_linux', { title: 'Spark Real time Dashboard 1.01' });
+  res.render('dashboard', { title: 'Spark Real time Dashboard 1.01' });
 });
 
 router.get('/debug', function(req, res, next) {
