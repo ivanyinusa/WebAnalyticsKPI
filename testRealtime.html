@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<p>Click on this text to update the chart with new data values as many times as you like!</p>
+
 <script type="text/javascript">
     //Width and height
     var w = 600;
@@ -87,40 +89,40 @@
 
     function refresh( dataset ) {
         //On click, update with new data
-                    //Update all rects
-                    svg.selectAll("rect")
-                            .data(dataset)
-                            .transition()
-                            .delay(function (d, i) {
-                                return i / dataset.length * 1000;
-                            })
-                            .duration(500)
-                            .attr("y", function (d) {
-                                return h - yScale(d);
-                            })
-                            .attr("height", function (d) {
-                                return yScale(d);
-                            })
-                            .attr("fill", function (d) {
-                                return "rgb(0, 0, " + (d * 10) + ")";
-                            });
-                    //Update all labels
-                    svg.selectAll("text")
-                            .data(dataset)
-                            .transition()
-                            .delay(function (d, i) {
-                                return i / dataset.length * 1000;
-                            })
-                            .duration(500)
-                            .text(function (d) {
-                                return d;
-                            })
-                            .attr("x", function (d, i) {
-                                return xScale(i) + xScale.rangeBand() / 2;
-                            })
-                            .attr("y", function (d) {
-                                return h - yScale(d) + 14;
-                            });
+        //Update all rects
+        svg.selectAll("rect")
+                .data(dataset)
+                .transition()
+                .delay(function (d, i) {
+                    return i / dataset.length * 1000;
+                })
+                .duration(500)
+                .attr("y", function (d) {
+                    return h - yScale(d);
+                })
+                .attr("height", function (d) {
+                    return yScale(d);
+                })
+                .attr("fill", function (d) {
+                    return "rgb(0, 0, " + (d * 10) + ")";
+                });
+        //Update all labels
+        svg.selectAll("text")
+                .data(dataset)
+                .transition()
+                .delay(function (d, i) {
+                    return i / dataset.length * 1000;
+                })
+                .duration(500)
+                .text(function (d) {
+                    return d;
+                })
+                .attr("x", function (d, i) {
+                    return xScale(i) + xScale.rangeBand() / 2;
+                })
+                .attr("y", function (d) {
+                    return h - yScale(d) + 14;
+                });
 
     }
 </script>
