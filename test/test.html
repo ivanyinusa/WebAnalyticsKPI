@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>D3: Using each() to start and end transitions</title>
-    <script type="text/javascript" src="js/d3.v3.js"></script>
+    <title>D3: Introducing the clipping path</title>
+    <script type="text/javascript" src="../js/d3.v3.js"></script>
     <style type="text/css">
 
         .axis path,
@@ -60,8 +60,19 @@
             .append("svg")
             .attr("width", w)
             .attr("height", h);
+    //Define clipping path
+    svg.append("clipPath")
+            .attr("id", "chart-area")
+            .append("rect")
+            .attr("x", padding)
+            .attr("y", padding)
+            .attr("width", w - padding * 3)
+            .attr("height", h - padding * 2);
     //Create circles
-    svg.selectAll("circle")
+    svg.append("g")
+            .attr("id", "circles")
+            .attr("clip-path", "url(#chart-area)")
+            .selectAll("circle")
             .data(dataset)
             .enter()
             .append("circle")
@@ -108,7 +119,7 @@
                         .each("start", function() {
                             d3.select(this)
                                     .attr("fill", "magenta")
-                                    .attr("r", 3);
+                                    .attr("r", 7);
                         })
                         .attr("cx", function(d) {
                             return xScale(d[0]);
@@ -118,6 +129,8 @@
                         })
                         .each("end", function() {
                             d3.select(this)
+                                    .transition()
+                                    .duration(1000)
                                     .attr("fill", "black")
                                     .attr("r", 2);
                         });
