@@ -233,7 +233,6 @@
     <script src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/notification.js"></script>
     <script src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dashboard.js"></script>
 
-	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/prototype.js" ></script>
 	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dojo.js"></script>
 	<script src='https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dojoloader.min.js'></script>
 
@@ -243,8 +242,14 @@
 			"https://rawgit.com/ivanyinusa/WebKPI/gh-pages/node_modules/dojo/store/Memory",
 			"https://rawgit.com/ivanyinusa/WebKPI/gh-pages/node_modules/dojo/json",
 			"https://rawgit.com/ivanyinusa/WebKPI/gh-pages/node_modules/dojo/domReady!"]);
-		var io = require('socket.io')(server);
-		require('https://rawgit.com/ivanyinusa/WebKPI/gh-pages/dashboard/sockets/base')(io);
+
+		//var express = require('express');
+		//var app = express();
+		//var http = require('http');
+		//var server = http.createServer(app);
+		//var io = require('socket.io')(server);
+		var io = require(["https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/socket.io",
+		"https://rawgit.com/ivanyinusa/WebKPI/gh-pages/dashboard/sockets/base"]);
 
 		$(function() {
 		Dashboard.init({interval:5, iostat:1});
