@@ -41,6 +41,7 @@
     "window-popup": "^1.0.1"
   },
   "devDependencies": {
+    "dojo-loader": "^2.0.0-beta.4",
     "nw-builder": "^2.2.0"
   }
 }
