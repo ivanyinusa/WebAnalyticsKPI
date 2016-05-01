@@ -232,8 +232,16 @@
     <script src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/socket.io.js"></script>
     <script src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/notification.js"></script>
     <script src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dashboard.js"></script>
+
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/prototype.js" ></script>
+	<script language="javascript" type="text/javascript" src="https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dojo.js"></script>
+
     <script>
-	$(function() {
+		require(["dojo/currency", "dojo/number", "dojo/store/Memory", "dojo/json", "dojo/domReady!"]);
+		var io = require('socket.io')(server);
+		require('https://rawgit.com/ivanyinusa/WebKPI/gh-pages/dashboard/sockets/base')(io);
+
+		$(function() {
 		Dashboard.init({interval:5, iostat:1});
 		Dashboard.SetInterval(1);
 		$("input[name='iostat-checkbox']").bootstrapSwitch('state', false, true);
