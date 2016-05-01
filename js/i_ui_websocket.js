@@ -1,6 +1,7 @@
 ﻿var i_ui_realtime_websocket;
 dojo.require("dojo.date.locale");
 dojo.require("https://raw.githubusercontent.com/ivanyinusa/WebKPI/gh-pages/js/dojox/timing.js");
+dojo.require("https://rawgit.com/ivanyinusa/WebKPI/gh-pages/js/dojo.js");
 dojo.declare("i_ui_websocket", null, {
     constructor: function(options) {
         if (options.div_spark_logo_activate) this.div_spark_logo_activate = options.div_spark_logo_activate;
